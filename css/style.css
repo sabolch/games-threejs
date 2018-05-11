@@ -1,0 +1,118 @@
+body {
+    margin: 0;
+}
+
+#blocker {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+#instructions {
+    width: 100%;
+    height: 100%;
+    display: -webkit-box;
+    display: -moz-box;
+    display: box;
+    -webkit-box-orient: horizontal;
+    -moz-box-orient: horizontal;
+    box-orient: horizontal;
+    -webkit-box-pack: center;
+    -moz-box-pack: center;
+    box-pack: center;
+    -webkit-box-align: center;
+    -moz-box-align: center;
+    box-align: center;
+    color: #ffffff;
+    text-align: center;
+    cursor: pointer;
+}
+
+body {
+    font-family: Monospace;
+    background-color: #000;
+    color: #fff;
+    margin: 0px;
+    overflow: hidden;
+}
+
+#info {
+    color: #fff;
+    position: absolute;
+    top: 10px;
+    width: 100%;
+    text-align: center;
+    z-index: 100;
+    display: block;
+}
+
+#info a {
+    color: #046;
+    font-weight: bold;
+}
+
+.loader {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 99999;
+    width: 100%;
+    background: url("../images/bg.jpg") no-repeat;
+    height: 100%;
+    background-position: center;
+    background-size: cover;
+}
+
+.animated {
+    position: absolute;
+    width: 100%;
+    height: auto;
+    bottom: 0;
+    padding: 10% 10% 5% 10%;
+}
+
+@-webkit-keyframes blinker {
+    from {opacity: 1.0;}
+    to {opacity: 0.0;}
+}
+.play{
+    display: none;
+    position: relative;
+    width: 100%;
+    margin-top: 20%;
+
+}
+.play h1{
+    margin-left: auto;
+    margin-right: auto;
+    width: 200px;
+    border: 5px solid white;
+    padding: 1% 2% 1% 2%;
+    font-weight: bolder;
+    font-size: 4em;
+    text-decoration: blink;
+    -webkit-animation-name: blinker;
+    -webkit-animation-duration: 0.6s;
+    -webkit-animation-iteration-count:infinite;
+    -webkit-animation-timing-function:ease-in-out;
+    -webkit-animation-direction: alternate;
+}
+.play h1:hover{
+    cursor: pointer;
+}
+/************************** Sound ******************************/
+.speaker{
+    position: absolute;
+    z-index: 999999;
+    font-size: 2em;
+    margin: 1%;
+}
+.speaker:hover{
+    cursor: pointer;
+}
+.volicon{
+    float: left;
+}
+

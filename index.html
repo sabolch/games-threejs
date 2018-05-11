@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Airplane</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+<div class="speaker">
+    <span class="fa fa-volume-up volicon">&nbsp;</span>
+</div>
+<div class="loader">
+    <div class="play">
+        <h1  align="center" id="play">Play</h1>
+    </div>
+
+
+    <div class="animated">
+        <div style="opacity: .7; background-color: #004466" class="progress">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100" style="width:0%"></div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="js/THREE_FBX.js"></script>
+<script src="js/inflate.js"></script>
+<script src="js/FBXLoader.js"></script>
+<script src="js/OrbitControls.js"></script>
+<script src="js/Detector.js"></script>
+<script src="js/stat.js"></script>
+<script>
+    var value = 50;
+    function setLoading(percentVal) {
+        var bar = $('.progress-bar-animated');
+        var percentVal = percentVal + '%';
+        bar.width(percentVal);
+        if(percentVal == '100%'){
+            setTimeout(function () {
+                $('.play').show();
+
+            },500);
+        }
+
+    }
+    var script = document.createElement('script');
+    script.src = "js/logic/model.js"
+    document.body.appendChild(script);
+
+    $('.loader').show();
+    setLoading(value);
+
+    script.onload = function() {
+        // после выполнения скрипта становится доступна функция _
+        //alert( "hioio" ); // её код
+    }
+    $('#play').on('click',function (e) {
+        e.preventDefault();
+        $('.loader').fadeOut(1000);
+    });
+
+    $('.volicon').on('click',function (e) {
+       $(this).toggleClass("fa-volume-up");
+       $(this).toggleClass("fa-volume-off");
+       if(sound && sound.isPlaying){
+           sound.pause();
+       }else {
+           sound.play();
+       }
+    });
+
+</script>
+
+
+</body>
+</html>
