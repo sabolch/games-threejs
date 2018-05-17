@@ -2,6 +2,7 @@ if (!Detector.webgl) Detector.addGetWebGLMessage();
 
 var container, stats, controls,keyboard;
 var camera, scene, renderer, light;
+var  water, sphere;
 var Airplane;
 var sound;
 var clock = new THREE.Clock();
@@ -61,7 +62,7 @@ function init() {
     // scene.add( new THREE.CameraHelper( light.shadow.camera ) );
 
     // ground
-    var mesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(2000, 2000), new THREE.MeshPhongMaterial({
+   /* var mesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(2000, 2000), new THREE.MeshPhongMaterial({
         color: 0x999999,
         depthWrite: false
     }));
@@ -72,7 +73,10 @@ function init() {
     var grid = new THREE.GridHelper(2000, 20, 0x000000, 0x000000);
     grid.material.opacity = 0.2;
     grid.material.transparent = true;
-    scene.add(grid);
+    scene.add(grid);*/
+
+
+
 
 
     var manager = new THREE.LoadingManager();
@@ -118,11 +122,12 @@ function init() {
 
             });
             Airplane = object;
+            Airplane.position.set(0,100,0);
             Airplane.add(camera);
             scene.add(Airplane);
             camera.position.set(0, 150, -400);
             camera.rotateY(Math.PI);
-            camera.rotateX(-Math.PI/16);
+            camera.rotateX(-Math.PI/8);
 
         }
     );
@@ -133,6 +138,76 @@ function init() {
     renderer.shadowMap.enabled = true;
     container.appendChild(renderer.domElement);
 
+
+
+    /************************************************************/
+
+    // Water
+    var waterGeometry = new THREE.CircleGeometry( 10000, 16 );
+    water = new THREE.Water(
+        waterGeometry,
+        {
+            textureWidth: 512,
+            textureHeight: 512,
+            waterNormals: new THREE.TextureLoader().load( 'textures/waternormals.jpg', function ( texture ) {
+                texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+            }),
+            alpha: 1.0,
+            sunDirection: light.position.clone().normalize(),
+            sunColor: 0xffffff,
+            waterColor: 0x001e0f,
+            distortionScale:  3.7,
+            fog: scene.fog !== undefined
+        }
+    );
+    water.rotation.x = - Math.PI / 2;
+    scene.add( water );
+    // Skybox
+    var sky = new THREE.Sky();
+    sky.scale.setScalar( 10000 );
+    scene.add( sky );
+    var uniforms = sky.material.uniforms;
+    uniforms.turbidity.value = 10;
+    uniforms.rayleigh.value = 2;
+    uniforms.luminance.value = 1;
+    uniforms.mieCoefficient.value = 0.005;
+    uniforms.mieDirectionalG.value = 0.8;
+    var parameters = {
+        distance: 400,
+        inclination: 0.2,
+        azimuth: 0.205
+    };
+    var cubeCamera = new THREE.CubeCamera( 1, 20000, 256 );
+    cubeCamera.renderTarget.texture.minFilter = THREE.LinearMipMapLinearFilter;
+    function updateSun() {
+        var theta = Math.PI * ( parameters.inclination - 0.5 );
+        var phi = 2 * Math.PI * ( parameters.azimuth - 0.5 );
+        light.position.x = parameters.distance * Math.cos( phi );
+        light.position.y = parameters.distance * Math.sin( phi ) * Math.sin( theta );
+        light.position.z = parameters.distance * Math.sin( phi ) * Math.cos( theta );
+        sky.material.uniforms.sunPosition.value = light.position.copy( light.position );
+        water.material.uniforms.sunDirection.value.copy( light.position ).normalize();
+        cubeCamera.update( renderer, scene );
+    }
+    updateSun();
+    //
+
+
+
+    // GUI
+    var gui = new dat.GUI();
+    var folder = gui.addFolder( 'Sky' );
+    folder.add( parameters, 'inclination', 0, 0.5, 0.0001 ).onChange( updateSun );
+    folder.add( parameters, 'azimuth', 0, 1, 0.0001 ).onChange( updateSun );
+    folder.open();
+    var uniforms = water.material.uniforms;
+    var folder = gui.addFolder( 'Water' );
+    folder.add( uniforms.distortionScale, 'value', 0, 8, 0.1 ).name( 'distortionScale' );
+    folder.add( uniforms.size, 'value', 0.1, 10, 0.1 ).name( 'size' );
+    folder.add( uniforms.alpha, 'value', 0.9, 1, .001 ).name( 'alpha' );
+    folder.open();
+    gui.close();
+    /************************************************************/
     window.addEventListener('resize', onWindowResize, false);
 
     // stats
@@ -140,7 +215,7 @@ function init() {
     container.appendChild(stats.dom);
 
     setTimeout(function () {
-       console.log(Airplane.animations[0].tracks);
+       //console.log(Airplane.animations[0].tracks);
         //var walkClip = THREE.AnimationUtils.splitClip( Airplane.animations[ 0 ], 'walk', 0, 1 );
         var clip = THREE.AnimationClip.parse(THREE.AnimationClip.toJSON(Airplane.animations[0]));
         const up = THREE.AnimationUtils.subclip(clip, 'down', ['stab_flap.quaternion'], 0, 2).optimize();
@@ -218,6 +293,8 @@ function key() {
         AirplaneAnimations.left.stop();
     }
     if(keyboard.pressed("left") || keyboard.pressed("A")) {
+        Airplane.rotateY(-0.02);
+
         if(!controls){
             AirplaneAnimations.left.reset();
             AirplaneAnimations.left.play();
@@ -233,6 +310,7 @@ function key() {
         AirplaneAnimations.right.stop();
     }
     if(keyboard.pressed("right") || keyboard.pressed("D")) {
+        Airplane.rotateY(0.02);
         if(!controls){
             AirplaneAnimations.right.reset();
             AirplaneAnimations.right.play();
@@ -246,16 +324,20 @@ function key() {
 
     if(keyboard.pressed("E") && duration_AirplaneSpeed < 10){
        // console.log(duration_AirplaneSpeed);
-        duration_AirplaneSpeed += 0.02;
+        duration_AirplaneSpeed -= 0.02;
         AirplaneAnimations.spinner.setDuration(duration_AirplaneSpeed);
     }
 
     if(keyboard.pressed("R") && duration_AirplaneSpeed > 0){
         //console.log(duration_AirplaneSpeed);
-        duration_AirplaneSpeed -= 0.02;
+        duration_AirplaneSpeed += 0.02;
         AirplaneAnimations.spinner.setDuration(duration_AirplaneSpeed);
     }
 
+
+    if(keyboard.pressed("M")){
+        Airplane.translateZ(5);
+    }
     keyboard.update();
 }
 
@@ -279,10 +361,15 @@ function animate() {
             mixers[i].update(clock.getDelta());
         }
 
+        //Airplane.translateX(0.5);
+
     }
-    if (Airplane) {
-        // Airplane.rotateY(0.002);
-    }
+
+         //Airplane.position.x += 5;
+
+
+    var time = performance.now() * 0.001;
+    water.material.uniforms.time.value += 1.0 / 60.0;
 
     renderer.render(scene, camera);
     key();

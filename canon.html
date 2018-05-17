@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Ship</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+        }
+
+        #blocker {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+        #instructions {
+            width: 100%;
+            height: 100%;
+            display: -webkit-box;
+            display: -moz-box;
+            display: box;
+            -webkit-box-orient: horizontal;
+            -moz-box-orient: horizontal;
+            box-orient: horizontal;
+            -webkit-box-pack: center;
+            -moz-box-pack: center;
+            box-pack: center;
+            -webkit-box-align: center;
+            -moz-box-align: center;
+            box-align: center;
+            color: #ffffff;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        body {
+            font-family: Monospace;
+            background-color: #000;
+            color: #fff;
+            margin: 0px;
+            overflow: hidden;
+        }
+
+        #info {
+            color: #fff;
+            position: absolute;
+            top: 10px;
+            width: 100%;
+            text-align: center;
+            z-index: 100;
+            display: block;
+        }
+
+        #info a {
+            color: #046;
+            font-weight: bold;
+        }
+
+        .points {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 50px;
+            background-color: black;
+            opacity: 0.8;
+            text-align: center;
+            font-size: 30px;
+        }
+
+        .health {
+            color: green;
+        }
+    </style>
+</head>
+
+<body>
+<script src="js/THREE_FBX.js"></script>
+<script src="js/inflate.js"></script>
+<script src="js/KeyboardState.js"></script>
+<script src="js/FBXLoader.js"></script>
+<script src="js/Detector.js"></script>
+<script src="js/stat.js"></script>
+<script src="js/Water.js"></script>
+<script src="js/Sky.js"></script>
+<script src="js/libs/dat.gui.min.js"></script>
+
+<script src="js/VolumetricFire.js"></script>
+<script src="js/Fire.js"></script>
+<script src="js/FireShader.js"></script>
+<script src="js/cannon.js"></script>
+<script src="js/Projector.js"></script>
+<div id="loader" style="position: absolute;left: 0;top: 0; width: 100%; height: 100vh; z-index: 9999999;">
+<img src="images/bg_ship.jpg" style="min-width: 100%;min-height: 100%; max-width: 100%; max-height: 100%;">
+</div>
+<div class="points">
+    <span style="font-weight: 900; color: red;">
+    Pirates of Carribean Sea |</span>
+    <span class="health">
+        Ship Health <span id="health">100</span>%
+</span>
+    <span style="color: yellow">
+        | Time reaming : <span id="time">2:00</span>
+    </span>
+    <span style="color: crimson">
+        | Enemys : <span id="enemy"></span>
+    </span>
+</div>
+
+<h1 id="win" style="position: absolute; left: 35%; top: 20%; font-size: 80px; display: none;">YOU WIN AGAIN!</h1>
+<h1 id="lose" style="position: absolute; left: 30%; top: 20%; font-size: 80px; display: none;">YOU LOSE YOUR SHIP!</h1>
+
+<script>
+    if (!Detector.webgl) Detector.addGetWebGLMessage();
+
+    var PAUSE = false,
+        IS_PAUSE = false;
+    var HEALTH = Math.PI;
+    var health = {};
+    var colorvalue = 1.6;
+    var counter = 0;
+    var container, stats, controls, keyboard;
+    var camera, scene, renderer, light;
+    var water, sphere;
+    var Ship;
+    var sound, fire;
+    var clock = new THREE.Clock();
+    var CrossTarget;
+
+    var Enemys = [];
+    var EnemysHealth = [];
+
+    var mixers = [];
+    var sphereShape, sphereBody, world, physicsMaterial, walls = [], balls = [], ballMeshes = [], boxes = [],
+        Enemyballs = [], EnemyballMeshes = [], fires = []
+    ;
+
+
+    setTimeout(function () {
+        init();
+        animate();
+        initCannon();
+        document.getElementById("loader").style.display = 'none';
+
+    },1000);
+
+
+    var action, flying;
+    var duration_ShipSpeed = 2;
+
+
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min)) + min;
+    }
+
+    var text = new THREE.TextureLoader().load('images/earth.jpg', function (tex) {
+        return tex;
+    });
+
+    var castleTexture = new THREE.TextureLoader().load('images/castle.jpg', function (tex) {
+        tex.wrapS = THREE.RepeatWrapping;
+        tex.wrapT = THREE.RepeatWrapping;
+        return tex;
+    });
+
+    function initCannon() {
+        world = new CANNON.World();
+        world.quatNormalizeSkip = 0;
+        world.quatNormalizeFast = false;
+
+        var solver = new CANNON.GSSolver();
+
+        world.defaultContactMaterial.contactEquationStiffness = 1e9;
+        world.defaultContactMaterial.contactEquationRelaxation = 4;
+
+        solver.iterations = 7;
+        solver.tolerance = 0.1;
+        var split = true;
+        if (split)
+            world.solver = new CANNON.SplitSolver(solver);
+        else
+            world.solver = solver;
+
+        world.gravity.set(0, -20, 0);
+        world.broadphase = new CANNON.NaiveBroadphase();
+
+        // Create a slippery material (friction coefficient = 0.0)
+        physicsMaterial = new CANNON.Material("slipperyMaterial");
+        var physicsContactMaterial = new CANNON.ContactMaterial(physicsMaterial,
+            physicsMaterial,
+            0.0, // friction coefficient
+            0.3  // restitution
+        );
+        // We must add the contact materials to the world
+        world.addContactMaterial(physicsContactMaterial);
+
+        // Create a sphere
+        var mass = 2, radius = 1.3;
+        sphereShape = new CANNON.Sphere(radius);
+        sphereBody = new CANNON.Body({mass: mass});
+        sphereBody.addShape(sphereShape);
+        sphereBody.position.set(0, 5, 0);
+        sphereBody.linearDamping = 0.9;
+        world.add(sphereBody);
+
+        // Create a plane
+        var groundShape = new CANNON.Plane();
+        var groundBody = new CANNON.Body({mass: 0});
+        groundBody.addShape(groundShape);
+        groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2);
+        world.add(groundBody);
+    }
+
+
+    function init() {
+
+        container = document.createElement('div');
+        document.body.appendChild(container);
+
+        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 20000);
+        camera.position.set(100, 200, 300);
+
+        keyboard = new KeyboardState();
+
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xa0a0a0);
+        scene.fog = new THREE.Fog(0xa0a0a0, 20, 10);
+
+        light = new THREE.HemisphereLight(0xffffff, 0x444444);
+        light.position.set(0, 200, 0);
+        scene.add(light);
+
+        light = new THREE.DirectionalLight(0xffffff);
+        light.position.set(0, 200, 100);
+        light.castShadow = true;
+        light.shadow.camera.top = 180;
+        light.shadow.camera.bottom = -100;
+        light.shadow.camera.left = -120;
+        light.shadow.camera.right = 120;
+        scene.add(light);
+
+        var manager = new THREE.LoadingManager();
+        manager.onStart = function (url, itemsLoaded, itemsTotal) {
+            console.log('Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
+        };
+
+        manager.onLoad = function () {
+            console.log('Loading complete!');
+        };
+
+
+        manager.onProgress = function (url, itemsLoaded, itemsTotal) {
+            console.log('Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
+        };
+
+        manager.onError = function (url) {
+            console.log('There was an error loading ' + url);
+        };
+
+        var loader = new THREE.FBXLoader(manager);
+        loader.load('models/ship2.fbx',
+
+            function (object) {
+
+                object.mixer = new THREE.AnimationMixer(object);
+                mixers.push(object.mixer);
+
+
+                action = object.mixer.clipAction(object.animations[0]);
+                action.setDuration(0.1);
+                //console.log(THREE.AnimationClip.toJSON(object.animations[ 0 ]));
+
+                object.traverse(function (child) {
+
+                    if (child.isMesh) {
+
+                        child.castShadow = true;
+                        child.receiveShadow = true;
+
+                    }
+
+                });
+                Ship = object;
+                Ship.position.set(0, 9, 0);
+                Ship.add(camera);
+                scene.add(Ship);
+                camera.position.set(0, 150, -400);
+                camera.rotateY(Math.PI);
+                camera.rotateX(-Math.PI / 8);
+
+            }
+        );
+
+        renderer = new THREE.WebGLRenderer({antialias: true});
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        renderer.transparent = true;
+        container.appendChild(renderer.domElement);
+
+
+        /************************************************************/
+
+        // Water
+        var waterGeometry = new THREE.CircleGeometry(10000, 16);
+        water = new THREE.Water(
+            waterGeometry,
+            {
+                textureWidth: 512,
+                textureHeight: 512,
+                waterNormals: new THREE.TextureLoader().load('textures/waternormals.jpg', function (texture) {
+                    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+                }),
+                alpha: 1.0,
+                sunDirection: light.position.clone().normalize(),
+                sunColor: 0xffffff,
+                waterColor: 0x001e0f,
+                distortionScale: 3.7,
+                fog: scene.fog !== undefined
+            }
+        );
+        water.rotation.x = -Math.PI / 2;
+        scene.add(water);
+        // Skybox
+        var sky = new THREE.Sky();
+        sky.scale.setScalar(10000);
+        scene.add(sky);
+        var uniforms = sky.material.uniforms;
+        uniforms.turbidity.value = 10;
+        uniforms.rayleigh.value = 2;
+        uniforms.luminance.value = 1;
+        uniforms.mieCoefficient.value = 0.005;
+        uniforms.mieDirectionalG.value = 0.8;
+        var parameters = {
+            distance: 400,
+            inclination: 0.2,
+            azimuth: 0.205
+        };
+        var cubeCamera = new THREE.CubeCamera(1, 20000, 256);
+        cubeCamera.renderTarget.texture.minFilter = THREE.LinearMipMapLinearFilter;
+
+        function updateSun() {
+            var theta = Math.PI * ( parameters.inclination - 0.5 );
+            var phi = 2 * Math.PI * ( parameters.azimuth - 0.5 );
+            light.position.x = parameters.distance * Math.cos(phi);
+            light.position.y = parameters.distance * Math.sin(phi) * Math.sin(theta);
+            light.position.z = parameters.distance * Math.sin(phi) * Math.cos(theta);
+            sky.material.uniforms.sunPosition.value = light.position.copy(light.position);
+            water.material.uniforms.sunDirection.value.copy(light.position).normalize();
+            cubeCamera.update(renderer, scene);
+        }
+
+        updateSun();
+        //
+
+        // GUI
+        var gui = new dat.GUI();
+        var folder = gui.addFolder('Sky');
+        folder.add(parameters, 'inclination', 0, 0.5, 0.0001).onChange(updateSun);
+        folder.add(parameters, 'azimuth', 0, 1, 0.0001).onChange(updateSun);
+        folder.open();
+        var uniforms = water.material.uniforms;
+        var folder = gui.addFolder('Water');
+        folder.add(uniforms.distortionScale, 'value', 0, 8, 0.1).name('distortionScale');
+        folder.add(uniforms.size, 'value', 0.1, 10, 0.1).name('size');
+        folder.add(uniforms.alpha, 'value', 0.9, 1, .001).name('alpha');
+        folder.open();
+        gui.close();
+        /************************************************************/
+
+
+        fire = new VolumetricFire(
+            70,// fireWidth,
+            50,// fireHeight,
+            50,// fireDepth,
+            50,// sliceSpacing,
+            camera
+        );
+        scene.add(fire.mesh);
+        fire.mesh.position.set(10, 10, 0);
+
+        /*************** Target ******************/
+        CrossTarget = new THREE.Mesh(new THREE.CubeGeometry(40, 1, 10), new THREE.MeshBasicMaterial({color: 0xff0000}));
+        CrossTarget.position.set(0, 0, 0);
+        scene.add(CrossTarget);
+
+        /************************Enemy **********************/
+
+        for (var i = 0; i < 5; i++) {
+            var Enemy = new THREE.Mesh(new THREE.CubeGeometry(80, 80, 80), new THREE.MeshLambertMaterial({ map: castleTexture}));
+
+            Enemy.position.set(getRandomInt(-(i * 2 + 900), i * 2 + 1000), 35, getRandomInt(-(i * 2 + 1000), i * 2 + 1000));
+            Enemys.push(Enemy);
+            scene.add(Enemys[Enemys.length - 1]);
+            EnemysHealth.push(3);
+        }
+        document.getElementById("enemy").innerHTML = " " + Enemys.length;
+
+        /***********************Health ***********************/
+        var progressGeo = new THREE.RingBufferGeometry(27, 20, 32, null, 0, Math.PI);
+        var progressMat = new THREE.MeshBasicMaterial({color: 0x0000ff});
+        health = new THREE.Mesh(progressGeo, progressMat);
+        //console.log(colorvalue);
+        health.material.color.setRGB(1.6 - colorvalue, colorvalue);
+        scene.add(health);
+
+
+        window.addEventListener('resize', onWindowResize, false);
+        stats = new Stats();
+        container.appendChild(stats.dom);
+
+
+        window.addEventListener("click", function (e) {
+                //if (controls.enabled == true) {
+
+            }
+        );
+
+    }
+
+    var EnemyFire = true;
+
+
+    function key() {
+        if (!PAUSE) {
+
+            // Target
+            if (keyboard.pressed("J")) {
+                CrossTarget.translateX(2);
+            }
+            if (keyboard.pressed("K")) {
+                CrossTarget.translateZ(-2);
+            }
+            if (keyboard.pressed("I")) {
+                CrossTarget.translateZ(2);
+            }
+            if (keyboard.pressed("L")) {
+                CrossTarget.translateX(-2);
+            }
+            //  }
+
+            // Ship
+            if (keyboard.up("down") || keyboard.up("S")) {
+                action.stop();
+            }
+            if (keyboard.pressed("down") || keyboard.pressed("S")) {
+                Ship.translateZ(-0.5);
+                CrossTarget.translateZ(-0.5);
+                action.play();
+            }
+
+            if (keyboard.up("up") || keyboard.up("W")) {
+                action.stop();
+            }
+            if (keyboard.pressed("up") || keyboard.pressed("W")) {
+                Ship.translateZ(0.5);
+                CrossTarget.translateZ(0.5);
+                action.play();
+
+            }
+
+            if (keyboard.up("left") || keyboard.up("A")) {
+                action.stop();
+
+            }
+            if (keyboard.pressed("left") || keyboard.pressed("A")) {
+                Ship.rotateY(-0.005);
+                health.rotateY(-0.005);
+                CrossTarget.rotateY(-0.005);
+
+                action.play();
+
+            }
+
+            if (keyboard.up("right") || keyboard.up("D")) {
+                action.stop();
+
+            }
+            if (keyboard.pressed("right") || keyboard.pressed("D")) {
+                Ship.rotateY(0.005);
+                health.rotateY(0.005);
+                CrossTarget.rotateY(0.005);
+                action.play();
+
+            }
+
+
+            if (keyboard.pressed("E") && duration_ShipSpeed < 10) {
+                camera.rotateX(0.02);
+            }
+
+            if (keyboard.pressed("R") && duration_ShipSpeed > 0) {
+                camera.rotateX(-0.02);
+
+            }
+            // Info
+            if (keyboard.up("M")) {
+                // Ship.translateZ(5);
+                console.log(Ship.position);
+            }
+
+            // Fire
+            if (keyboard.up("space")) {
+                CreateShootBall(Ship.position, CrossTarget.position);
+            }
+
+            if (health && CrossTarget) {
+                health.position.set(Ship.position.x, Ship.position.y + 70, Ship.position.z);
+            }
+
+
+            /*********************Enemy*************/
+            for (var j = 0; j < Enemys.length; j++) {
+                for (var i = 0; i < balls.length; i++) {
+                    if ((balls[i].position.x < Enemys[j].position.x + 40 &&
+                            balls[i].position.x > Enemys[j].position.x - 40) &&
+                        (balls[i].position.z < Enemys[j].position.z + 40 &&
+                            balls[i].position.z > Enemys[j].position.z - 40)
+
+                    ) {
+                        scene.remove(ballMeshes[i]);
+                        balls.splice(i, 1);
+                        ballMeshes.splice(i, 1);
+                        EnemysHealth[j] -= 1;
+
+                        if(EnemysHealth[j] <= 0){
+                            scene.remove(Enemys[j]);
+                            Enemys.splice(j, 1);
+                            EnemysHealth.splice(j, 1);
+                            document.getElementById("enemy").innerHTML = " " + Enemys.length;
+
+                            if(Enemys.length < 1){
+                                PAUSE = true;
+                                clearInterval(TIMER);
+                                document.getElementById("win").style.display = 'flex';
+                                document.getElementById("time").style.color = "#00FF00";
+                            }
+                        }
+                    }
+
+                }
+            }
+
+
+            /*************************** Enemy Fire Atack ***********************/
+            for (var j = 0; j < Enemys.length; j++) {
+                    if ((Ship.position.x < Enemys[j].position.x + 300 &&
+                            Ship.position.x > Enemys[j].position.x - 300) &&
+                        (Ship.position.z < Enemys[j].position.z + 300 &&
+                            Ship.position.z > Enemys[j].position.z - 300)
+                    ) {
+                       if(EnemyFire && !PAUSE){
+                           EnemyFire = false;
+                           var en = Enemys[j];
+                           setTimeout(function () {
+                               CreateEnemyShootBall(en.position,
+                                   Ship.position);
+                               EnemyFire = true;
+                           },2000);
+                       }
+                    }
+
+            }
+
+            keyboard.update();
+        }
+    }
+
+    function CreateShootBall(pos, to) {
+        var ballShape = new CANNON.Sphere(3);
+        var ballGeometry = new THREE.SphereGeometry(ballShape.radius, 32, 32);
+        var x = pos.x;
+        var y = pos.y;
+        var z = pos.z;
+        var ballBody = new CANNON.Body({mass: 1});
+        ballBody.addShape(ballShape);
+        var ballMesh = new THREE.Mesh(ballGeometry, new THREE.MeshPhongMaterial({color: 0xdddddd, map: text}));
+        world.add(ballBody);
+        scene.add(ballMesh);
+        ballMesh.castShadow = true;
+        ballMesh.receiveShadow = true;
+        balls.push(ballBody);
+        ballMeshes.push(ballMesh);
+        ballBody.velocity.set(to.x - x, to.y + 15, to.z - z);
+
+        ballBody.position.set(x, y, z);
+        ballMesh.position.set(x, y, z);
+    }
+
+
+    function CreateEnemyShootBall(pos, to) {
+        var ballShape = new CANNON.Sphere(3);
+        var ballGeometry = new THREE.SphereGeometry(ballShape.radius, 32, 32);
+        var x = pos.x;
+        var y = pos.y;
+        var z = pos.z;
+        var ballBody = new CANNON.Body({mass: 1});
+        ballBody.addShape(ballShape);
+        var ballMesh = new THREE.Mesh(ballGeometry, new THREE.MeshPhongMaterial({color: 0xdddddd, map: text}));
+        world.add(ballBody);
+        scene.add(ballMesh);
+        ballMesh.castShadow = true;
+        ballMesh.receiveShadow = true;
+        Enemyballs.push(ballBody);
+        EnemyballMeshes.push(ballMesh);
+        ballBody.velocity.set(to.x - x, to.y - 15, to.z - z);
+
+        ballBody.position.set(x, y, z);
+        ballMesh.position.set(x, y, z);
+    }
+
+    function onWindowResize() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+    }
+
+    var dt = 1 / 120;
+
+    function animate() {
+        requestAnimationFrame(animate);
+        if (!PAUSE) {
+            var elapsed = clock.getElapsedTime();
+
+            if (Ship) {
+                if (fire && false) {
+                    fire.update(elapsed);
+                }
+                var time = performance.now() * 0.001;
+                water.material.uniforms.time.value += 1.0 / 60.0;
+                health.geometry.dispose();
+                progressGeo = new THREE.RingBufferGeometry(27, 20, 32, null, 0, HEALTH);
+                health.geometry = progressGeo;
+
+                key();
+                stats.update();
+
+                world.step(dt);
+                for (var i = 0; i < balls.length; i++) {
+                    ballMeshes[i].position.copy(balls[i].position);
+                    ballMeshes[i].quaternion.copy(balls[i].quaternion);
+                    if (balls[i].position.y < 5) {
+                        scene.remove(ballMeshes[i]);
+                        balls.splice(i, 1);
+                        ballMeshes.splice(i, 1);
+                    }
+                }
+                /**************** Enemy*************************/
+                for (var i = 0; i < Enemyballs.length; i++) {
+                    EnemyballMeshes[i].position.copy(Enemyballs[i].position);
+                    EnemyballMeshes[i].quaternion.copy(Enemyballs[i].quaternion);
+                    if (Enemyballs[i].position.y < 5 ) {
+                        scene.remove(EnemyballMeshes[i]);
+                        Enemyballs.splice(i, 1);
+                        EnemyballMeshes.splice(i, 1);
+                    }
+                        if(Enemyballs[i].position.x < Ship.position.x + 20 && Enemyballs[i].position.x > Ship.position.x - 20
+                        && Enemyballs[i].position.z < Ship.position.z + 50 && Enemyballs[i].position.z > Ship.position.z - 50)
+                     {
+                        scene.remove(EnemyballMeshes[i]);
+                        Enemyballs.splice(i, 1);
+                        EnemyballMeshes.splice(i, 1);
+                        colorvalue -= 0.2;
+                        HEALTH -= 0.4;
+                        health.material.color.setRGB(1.6 - colorvalue, colorvalue);
+
+                        if(HEALTH <= 0){
+                            HEALTH = 0;
+                            setTimeout(function () {
+                                PAUSE = true;
+                                clearInterval(TIMER);
+                                document.getElementById("lose").style.display = 'flex';
+                                document.getElementById("time").style.color = "#FF0000";
+
+                            },500);
+
+                        }
+
+                         document.getElementById("health").innerHTML = " " + Math.floor(( (HEALTH / 100) * Math.PI ) * 1000);
+
+                    }
+                }
+            }
+
+            if (mixers.length > 0) {
+
+                for (var i = 0; i < mixers.length; i++) {
+                    mixers[i].update(clock.getDelta());
+                }
+
+            }
+
+
+            renderer.render(scene, camera);
+
+        }
+
+    }
+
+    var GameTime = 2*60;
+    document.addEventListener("keyup", function (e) {
+        if (e.keyCode == 80) {
+            PAUSE = !PAUSE;
+            IS_PAUSE = !IS_PAUSE;
+        }
+    });
+    var TIMER = setInterval(function () {
+        if (IS_PAUSE) return;
+        GameTime -= 1;
+        var minutes = Math.floor(GameTime / 60);
+        document.getElementById("time").innerHTML = " " + minutes + ":" + ( GameTime - (minutes * 60));
+        if (GameTime == 0) {
+            clearInterval(TIMER);
+            document.getElementById("lose").style.display = 'flex';
+            document.getElementById("time").style.color = "#FF0000";
+            PAUSE = true;
+
+        }
+    }, 1000);
+
+</script>
+
+
+</body>
+</html>
