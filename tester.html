@@ -4,142 +4,442 @@
     <title>three.js webgl - shaders - ocean</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Black+Han+Sans" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
-        body {
-            color: #000;
-            font-family:Monospace;
-            font-size:13px;
-            margin: 0px;
+        * {
+            padding: 0;
+            margin: 0;
+            font-family: 'Black Han Sans', sans-serif;
+
+        }
+
+        .boxes {
+            font-family: 'Black Han Sans', sans-serif;
+            float: left;
+            padding: 5px;
+            color: white;
+            font-size: 15px;
+            margin: 0 20px;
+        }
+
+        .info_circle {
+            position: relative;
+            width: 30px;
+            height: 30px;
+            margin: 0 auto;
+            background: #222;
+            padding: 5px;
+            border-radius: 50%;
+            border: 5px solid #444;
+            overflow: hidden;
+            cursor: pointer;
+
+        }
+
+        .info_circle .indicator {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 25px;
+            height: 10px;
+        }
+
+        .indicator-active {
+            background-color: orange;
+        }
+
+        .indicator-deactive {
+            background-color: #616161;
+        }
+
+        #speed_value, #throttle_value, #altitude_value {
+            font-size: 40px;
+        }
+
+        /**********Range ********************/
+        .range {
+            float: left;
+            padding: 5px;
+            -webkit-transform: rotate(-180deg);
+            transform: rotate(-180deg);
+        }
+
+        .range-line {
+            height: 4px;
+            width: 36px;
+            margin-bottom: 3px;
+            background-color: #d3d3d3;
+        }
+
+        .range-line-active {
+            background-color: #00aa00;
+        }
+
+        /************************ Panel ***************************/
+        .panel {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background-color: black;
+            opacity: 0.7;
+            z-index: 999999;
+        }
+
+        /************************ Compass ********************************/
+
+        .compass-container {
+            position: relative;
+            float: left;
+
+        }
+
+        .compass {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            margin: 5px 0px;
+            background: #222;
+            padding: 5px;
+            border-radius: 50%;
+            border: 5px solid #444;
             overflow: hidden;
         }
-        #info {
+
+        .compass .disc {
             position: absolute;
-            top: 0px; width: 100%;
-            text-align:center;
-            padding: 5px;
+            top: 5px;
+            left: 5px;
+            z-index: 200;
+            background: url('images/compass.svg');
+            width: 60px;
+            height: 60px;
+            background-size: 100%;
         }
+
+        .compass .arrow {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            z-index: 1000;
+            background: url('images/arrow.svg');
+            width: 60px;
+            height: 60px;
+            background-size: 100%;
+        }
+
+        /************* Volume *************************/
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 100px;
+            height: 24px;
+        }
+
+        .switch input {
+            display: none;
+        }
+
+        .switch-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #616161;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        .switch-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 50px;
+            left: 4px;
+            bottom: 4px;
+            background-color: orange;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        input:checked + .switch-slider {
+            background-color: #616161;
+        }
+
+        input:focus + .switch-slider {
+            box-shadow: 0 0 1px #616161;
+        }
+
+        input:checked + .switch-slider:before {
+            -webkit-transform: translateX(42px);
+            -ms-transform: translateX(42px);
+            transform: translateX(42px);
+        }
+
+        /* Rounded switch-sliders */
+        .switch-slider.round {
+            border-radius: 34px;
+        }
+
+        .switch-slider.round:before {
+            border-radius: 34px;
+
+        }
+
+        .toggle-container {
+            position: relative;
+            margin: 5px auto;
+            float: left;
+        }
+
+        .music-switch-text {
+            position: relative;
+            bottom: 7px;
+            color: white;
+            font-size: 15px;
+        }
+
+        /****************** Valami meter  **********************/
+        .disc-meter {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            z-index: 200;
+            background: url('http://flightarcade.com/images/hud/attitude.png');
+            width: 70px;
+            height: 70px;
+            background-size: 100%;
+        }
+
+        .bottom-meter {
+            position: absolute;
+            top: 30px;
+            left:-65px;
+            background: #9e978e;
+            height: 80px;
+            width: 200px;
+            opacity: .6;
+            transform-origin: 50% 0px;
+        }
+        /**************************************************************/
+        .footer-container{
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -moz-box;
+            display: -moz-flex;
+            display: -ms-flexbox;
+            display: flex;
+
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            -webkit-justify-content: center;
+            -moz-justify-content: center;
+            justify-content: center;
+
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            -webkit-align-items: center;
+            -moz-align-items: center;
+            align-items: center;
+        }
+        /*****************************************/
+        .pause-btn{
+            position: absolute;
+            top: 7px;
+            left: 7px;
+            z-index: 200;
+            background: url('images/pause-button.svg');
+            width: 25px;
+            height: 25px;
+            background-size: 100%;
+
+        }
+
+label, input{
+    padding: 0;
+    margin: 0;
+}
     </style>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 </head>
 <body>
 
-<div id="container"></div>
+
+<footer class="panel">
+<div class="footer-container">
+    <div class="boxes">
+        <div class="info_circle" id="brake">
+            <div class="pause-btn"></div>
+        </div>
+        <span>PAUSE</span>
+    </div>
+    <div class="boxes">
+        <div class="info_circle" id="brake">
+            <div class="indicator indicator-deactive"></div>
+        </div>
+        <span>BRAKE</span>
+    </div>
+    <div class="boxes">
+        <div class="info_circle" id="ignition">
+            <div class="indicator indicator-deactive"></div>
+        </div>
+        <span>IGNITION</span>
+    </div>
+
+    <div class="boxes" style="width: 205px;">
+        <div class="range">
+            <div class="range-line"></div>
+            <div class="range-line"></div>
+            <div class="range-line"></div>
+            <div class="range-line"></div>
+            <div class="range-line"></div>
+            <div class="range-line"></div>
+            <div class="range-line"></div>
+            <div class="range-line"></div>
+            <div class="range-line"></div>
+            <div class="range-line"></div>
+        </div>
+
+        <div class="boxes">
+            <span>THROTTLE</span><br>
+            <span id="throttle_value">0%</span>
+        </div>
+    </div>
+
+    <div class="boxes" style="width: 140px;">
+        <span>SPEED</span><br>
+        <span id="speed_value">1 </span>KTS
+    </div>
 
 
-<script src="js/THREE_FBX.js"></script>
+    <div class="compass-container">
+        <div class="compass">
+            <div class="arrow"></div>
+            <div class="disc" id="compassDiscImg"></div>
+        </div>
+    </div>
 
-<script src="js/OrbitControls.js"></script>
-<script src="js/Water.js"></script>
-<script src="js/Sky.js"></script>
 
-<script src="js/Detector.js"></script>
-<script src="js/stat.js"></script>
-<script src="js/libs/dat.gui.min.js"></script>
+    <div class="boxes" style="width: 140px;">
+        <span>ALTITUDE</span><br>
+        <span id="altitude_value">700 </span>FT
+    </div>
+
+    <div class="compass-container">
+        <div class="compass">
+            <div class="disc-meter"></div>
+            <div class="bottom-meter"></div>
+        </div>
+    </div>
+
+    <div class="boxes" style="margin-top: 20px; width: 85px;">
+        <span id="roll" style="display: inline-block; width: 30px">0&deg;</span> ROLL<br>
+        <span id="pitch" style="display: inline-block; width: 30px">0&deg;</span> <span>PITCH</span>
+    </div>
+
+    <div class="boxes">
+        <label class="switch">
+            <input type="checkbox" checked>
+            <span class="switch-slider round"></span>
+        </label> <span class="music-switch-text">MUSIC</span>
+        <br>
+        <label class="switch">
+            <input type="checkbox" checked>
+            <span class="switch-slider round"></span>
+        </label> <span class="music-switch-text">ENGINE</span>
+        <br>
+        <label class="switch">
+            <input type="checkbox" checked>
+            <span class="switch-slider round"></span>
+        </label>
+        <span class="music-switch-text">EFFECTS</span>
+        <br>
+    </div>
+</div>
+
+</footer>
 
 <script>
-    if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
-    var container, stats;
-    var camera, scene, renderer, light;
-    var controls, water, sphere;
-    init();
-    animate();
-    function init() {
-        container = document.getElementById( 'container' );
-        //
-        renderer = new THREE.WebGLRenderer();
-        renderer.setPixelRatio( window.devicePixelRatio );
-        renderer.setSize( window.innerWidth, window.innerHeight );
-        container.appendChild( renderer.domElement );
-        //
-        scene = new THREE.Scene();
-        //
-        camera = new THREE.PerspectiveCamera( 55, window.innerWidth / window.innerHeight, 1, 20000 );
-        camera.position.set( 30, 30, 100 );
-        //
-        light = new THREE.DirectionalLight( 0xffffff, 0.8 );
-        scene.add( light );
-        // Water
-        var waterGeometry = new THREE.PlaneBufferGeometry( 10000, 10000 );
-        water = new THREE.Water(
-            waterGeometry,
-            {
-                textureWidth: 512,
-                textureHeight: 512,
-                waterNormals: new THREE.TextureLoader().load( 'textures/waternormals.jpg', function ( texture ) {
-                    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-                }),
-                alpha: 1.0,
-                sunDirection: light.position.clone().normalize(),
-                sunColor: 0xffffff,
-                waterColor: 0x001e0f,
-                distortionScale:  3.7,
-                fog: scene.fog !== undefined
-            }
-        );
-        water.rotation.x = - Math.PI / 2;
-        scene.add( water );
-        // Skybox
-        var sky = new THREE.Sky();
-        sky.scale.setScalar( 10000 );
-        scene.add( sky );
-        var uniforms = sky.material.uniforms;
-        uniforms.turbidity.value = 10;
-        uniforms.rayleigh.value = 2;
-        uniforms.luminance.value = 1;
-        uniforms.mieCoefficient.value = 0.005;
-        uniforms.mieDirectionalG.value = 0.8;
-        var parameters = {
-            distance: 400,
-            inclination: 0.2,
-            azimuth: 0.205
-        };
-        var cubeCamera = new THREE.CubeCamera( 1, 20000, 256 );
-        cubeCamera.renderTarget.texture.minFilter = THREE.LinearMipMapLinearFilter;
-        function updateSun() {
-            var theta = Math.PI * ( parameters.inclination - 0.5 );
-            var phi = 2 * Math.PI * ( parameters.azimuth - 0.5 );
-            light.position.x = parameters.distance * Math.cos( phi );
-            light.position.y = parameters.distance * Math.sin( phi ) * Math.sin( theta );
-            light.position.z = parameters.distance * Math.sin( phi ) * Math.cos( theta );
-            sky.material.uniforms.sunPosition.value = light.position.copy( light.position );
-            water.material.uniforms.sunDirection.value.copy( light.position ).normalize();
-            cubeCamera.update( renderer, scene );
+    var index = 0;
+    var deg = 0;
+    var move = 0;
+    $(document).on("keydown", function (event) {
+        // Up R
+        if (event.which == 82) {
+            if (index >= 10) return;
+            $('.range').children().eq(index).addClass('range-line-active');
+            index++;
+            $('#throttle_value').html((index * 10) + '%');
+
         }
-        updateSun();
-        //
+        // Down E
+        if (event.which == 69) {
+            if (index <= 0) return;
+            index--;
+            $('.range').children().eq(index).removeClass('range-line-active');
+            $('#throttle_value').html((index * 10) + '%');
 
+        }
+        // Brake B
+        if (event.which == 66) {
+            $('#brake').find(".indicator").toggleClass('indicator-active indicator-deactive');
+        }
+        // Ignition I
+        if (event.which == 73) {
+            $('#ignition').find(".indicator").toggleClass('indicator-active indicator-deactive');
+        }
 
+        //  A
+        if (event.which == 65) {
+            if(deg > 84) return;
+            deg += 1;
+            $('.bottom-meter').css({"-webkit-transform":"translateY("+move+"px) rotate(" + deg + "deg)"});
+        }
+        //  D
+        if (event.which == 68) {
+            if(deg < -85) return;
+            deg -= 1;
+            $('.bottom-meter').css({"-webkit-transform":"translateY("+move+"px) rotate(" + deg + "deg)"});
+        }
+        //  W
+        if (event.which == 87) {
+            if(move > 34) return;
+            move += 1;
+            $('.bottom-meter').css({"-webkit-transform":"translateY("+move+"px) rotate(" + deg + "deg)"});
+            console.log(move);
 
-        // GUI
-        var gui = new dat.GUI();
-        var folder = gui.addFolder( 'Sky' );
-        folder.add( parameters, 'inclination', 0, 0.5, 0.0001 ).onChange( updateSun );
-        folder.add( parameters, 'azimuth', 0, 1, 0.0001 ).onChange( updateSun );
-        folder.open();
-        var uniforms = water.material.uniforms;
-        var folder = gui.addFolder( 'Water' );
-        folder.add( uniforms.distortionScale, 'value', 0, 8, 0.1 ).name( 'distortionScale' );
-        folder.add( uniforms.size, 'value', 0.1, 10, 0.1 ).name( 'size' );
-        folder.add( uniforms.alpha, 'value', 0.9, 1, .001 ).name( 'alpha' );
-        folder.open();
-        //
-        window.addEventListener( 'resize', onWindowResize, false );
-    }
-    function onWindowResize() {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize( window.innerWidth, window.innerHeight );
-    }
-    function animate() {
-        requestAnimationFrame( animate );
-        render();
-        stats.update();
-    }
-    function render() {
-        var time = performance.now() * 0.001;
+        }
+        //  S
+        if (event.which == 83) {
+            if(move < -34) return;
+                move -= 1;
+            $('.bottom-meter').css({"-webkit-transform":"translateY("+move+"px) rotate(" + deg + "deg)"});
+            console.log(move);
 
-        water.material.uniforms.time.value += 1.0 / 60.0;
-        renderer.render( scene, camera );
-    }
+        }
+        console.log(event.which);
+
+        $('#pitch').html(move + "&deg;");
+        $('#roll').html(deg + "&deg;");
+    });
+
+    $(document).ready(function () {
+        $('.info_circle').on('click', function () {
+            $(this).find(".indicator").toggleClass('indicator-active indicator-deactive');
+        });
+
+        $('.pause-btn').on('click', function () {
+            console.log('PAused');
+        });
+    });
+
 </script>
 </body>
 </html>

@@ -114,5 +114,286 @@ body {
 }
 .volicon{
     float: left;
+    position: relative;
+}
+/************************ Panel ***************************/
+.panel{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background-color: black;
+    opacity: 0.7;
+    z-index: 999999;
+    display: none;
+}
+/************************ Compass ********************************/
+
+.compass {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin: 5px auto;
+    background: #222;
+    padding: 5px;
+    border-radius: 40px;
+    border: 5px solid #444;
+    overflow: hidden;
 }
 
+.compass .disc {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    z-index: 200;
+    background: url('../images/compass.svg');
+    width: 60px;
+    height: 60px;
+    background-size: 100%;
+}
+
+.compass .arrow {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    z-index: 1000;
+    background: url('../images/arrow.svg');
+    width: 60px;
+    height: 60px;
+    background-size: 100%;
+}
+
+/**** Volume **/
+.volume {
+    z-index: 999999;
+    -webkit-transform:rotate(-90deg);
+    transform:rotate(-90deg);
+    -webkit-appearance: none;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+    margin-left: -55px;
+    margin-top: 50px;
+    display: none;
+}
+
+.volume:hover {
+    opacity: 1;
+}
+
+.volume::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    background: #4CAF50;
+    cursor: pointer;
+}
+
+.volume::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    background: #4CAF50;
+    cursor: pointer;
+}
+/****************************************************************/
+.boxes {
+    font-family: 'Black Han Sans', sans-serif;
+    float: left;
+    padding: 5px;
+    color: white;
+    font-size: 15px;
+    margin: 0 20px;
+}
+
+.info_circle {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    margin: 0 auto;
+    background: #222;
+    padding: 5px;
+    border-radius: 50%;
+    border: 5px solid #444;
+    overflow: hidden;
+    cursor: pointer;
+
+}
+
+.info_circle .indicator {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 25px;
+    height: 10px;
+}
+
+.indicator-active {
+    background-color: orange;
+}
+
+.indicator-deactive {
+    background-color: #616161;
+}
+
+#speed_value, #throttle_value, #altitude_value {
+    font-size: 40px;
+}
+
+/**********Range ********************/
+.range {
+    float: left;
+    /*/padding: 5px;*/
+    -webkit-transform: rotate(-180deg);
+    transform: rotate(-180deg);
+}
+
+.range-line {
+    height: 4px;
+    width: 36px;
+    margin-bottom: 3px;
+    background-color: #d3d3d3;
+}
+
+.range-line-active {
+    background-color: #00aa00;
+}
+
+
+/************* Volume *************************/
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 100px;
+    height: 24px;
+}
+
+.switch input {
+    display: none;
+}
+
+.switch-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #616161;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.switch-slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 50px;
+    left: 4px;
+    bottom: 4px;
+    background-color: orange;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .switch-slider {
+    background-color: #616161;
+}
+
+input:focus + .switch-slider {
+    box-shadow: 0 0 1px #616161;
+}
+
+input:checked + .switch-slider:before {
+    -webkit-transform: translateX(42px);
+    -ms-transform: translateX(42px);
+    transform: translateX(42px);
+}
+
+/* Rounded switch-sliders */
+.switch-slider.round {
+    border-radius: 34px;
+}
+
+.switch-slider.round:before {
+    border-radius: 34px;
+
+}
+
+.toggle-container {
+    position: relative;
+    margin: 5px auto;
+    float: left;
+}
+
+.music-switch-text {
+    position: relative;
+    bottom: 7px;
+    color: white;
+    font-size: 15px;
+}
+
+/****************** Valami meter  **********************/
+.disc-meter {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 200;
+    background: url('http://flightarcade.com/images/hud/attitude.png');
+    width: 70px;
+    height: 70px;
+    background-size: 100%;
+}
+
+.bottom-meter {
+    position: absolute;
+    top: 30px;
+    left:-65px;
+    background: #9e978e;
+    height: 80px;
+    width: 200px;
+    opacity: .6;
+    transform-origin: 50% 0px;
+}
+/**************************************************************/
+.footer-container{
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -moz-flex;
+    display: -ms-flexbox;
+    display: flex;
+
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    -moz-justify-content: center;
+    justify-content: center;
+
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    -moz-align-items: center;
+    align-items: center;
+}
+/*****************************************/
+.pause-btn{
+    position: absolute;
+    top: 8px;
+    left: 9px;
+    z-index: 200;
+    background: url(../images/pause-button.svg);
+    width: 32px;
+    height: 32px;
+    background-size: 100%;
+
+}
+/*************** Bootstrap corection*****************/
+label, input{
+    padding: 0;
+    margin: 0;
+}
