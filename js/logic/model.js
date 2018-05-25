@@ -1,29 +1,50 @@
+var webglExists = (function () {
+    try {
+        var canvas = document.createElement('canvas');
+        return !!window.WebGLRenderingContext && ( canvas.getContext('webgl') || canvas.getContext('experimental-webgl') );
+    } catch (e) {
+        return false;
+    }
+})(); // jscs:ignore
+
+if (!webglExists) {
+    alert('Your browser does not appear to support WebGL. You can try viewing this page anyway, but it may be slow and some things may not look as intended. Please try viewing on desktop Firefox or Chrome.');
+}
+
+if (/&?webgl=0\b/g.test(location.hash)) {
+    webglExists = !confirm('Are you sure you want to disable WebGL on this page?');
+    if (webglExists) {
+        location.hash = '#';
+    }
+}
+
 if (!Detector.webgl) Detector.addGetWebGLMessage();
 
 Math.degrees = function (radians) {
     return radians * 180 / Math.PI;
 };
 var PAUSE = false;
-var THROTTLE = 0, ROLL = 0, PITCH = 0, SPEED = 1, ALTITUDE = 0;
+var THROTTLE = 5, ROLL = 0, PITCH = 0, SPEED = 1, ALTITUDE = 0;
 var SOUNDS = {};
 var keyboard;
+
+var terrainScene;
 
 var dir = 0;
 var container, stats, controls;
 var camera, scene, renderer, light;
 var water, sphere;
 var Airplane;
-var sound;
 var clock = new THREE.Clock();
 
 var mixers = [];
-var mixer2;
-var sound1;
 
 
 init();
+DrawIsland();
 animate();
-var action, flying;
+
+var action;
 var duration_AirplaneSpeed = 2;
 
 var AirplaneAnimations = {};
@@ -55,16 +76,15 @@ function init() {
         SOUNDS.music.setBuffer(buffer);
         SOUNDS.music.setLoop(true);
         SOUNDS.music.setVolume(0.5);
-        SOUNDS.music.play();
+
     });
 
     SOUNDS.engine = new THREE.Audio(listener);
     audioLoader.load('sounds/engine.ogg', function (buffer) {
         SOUNDS.engine.setBuffer(buffer);
         SOUNDS.engine.setLoop(true);
-        SOUNDS.engine.setPlaybackRate(0.3);
+        SOUNDS.engine.setPlaybackRate(THROTTLE / 10 + 0.3);
         SOUNDS.engine.setVolume(1.5);
-        SOUNDS.engine.play();
     });
 
     // var sound1 = new THREE.PositionalAudio( listener );
@@ -76,10 +96,6 @@ function init() {
     // mesh1.add( sound1 );
 
     /*********************************************************************/
-    light = new THREE.HemisphereLight(0xffffff, 0x444444);
-    light.position.set(0, 200, 0);
-    scene.add(light);
-
     light = new THREE.DirectionalLight(0xffffff);
     light.position.set(0, 200, 100);
     light.castShadow = true;
@@ -89,40 +105,25 @@ function init() {
     light.shadow.camera.right = 120;
     scene.add(light);
 
-    // scene.add( new THREE.CameraHelper( light.shadow.camera ) );
-
-    // ground
-    /* var mesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(2000, 2000), new THREE.MeshPhongMaterial({
-         color: 0x999999,
-         depthWrite: false
-     }));
-     mesh.rotation.x = -Math.PI / 2;
-     mesh.receiveShadow = true;
-     scene.add(mesh);
-
-     var grid = new THREE.GridHelper(2000, 20, 0x000000, 0x000000);
-     grid.material.opacity = 0.2;
-     grid.material.transparent = true;
-     scene.add(grid);*/
-
+    /************************************ Loader manager *********************/
 
     var manager = new THREE.LoadingManager();
     manager.onStart = function (url, itemsLoaded, itemsTotal) {
-        console.log('Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
+        // console.log('Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
     };
 
     manager.onLoad = function () {
-        console.log('Loading complete!');
+        // console.log('Loading complete!');
         setLoading(100);
     };
 
 
     manager.onProgress = function (url, itemsLoaded, itemsTotal) {
-        console.log('Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
+        // console.log('Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
     };
 
     manager.onError = function (url) {
-        console.log('There was an error loading ' + url);
+        // console.log('There was an error loading ' + url);
     };
 
     var loader = new THREE.FBXLoader(manager);
@@ -150,7 +151,7 @@ function init() {
             });
             Airplane = object;
             Airplane.position.set(0, 100, 0);
-            Airplane.scale.set(0.1,0.1,0.1);
+            Airplane.scale.set(0.05, 0.05, 0.05);
             Airplane.add(camera);
             scene.add(Airplane);
             camera.position.set(0, 150, -400);
@@ -159,13 +160,6 @@ function init() {
 
         }
     );
-
-    var b = new THREE.Mesh(new THREE.BoxGeometry(50, 50, 50), new THREE.MeshPhongMaterial({color: 0x55FF55}));
-    b.position.set(0, 0, 300);
-    scene.add(b);
-    var b2 = new THREE.Mesh(new THREE.BoxGeometry(50, 50, 50), new THREE.MeshPhongMaterial({color: 0x55FF55}));
-    b2.position.set(0, 0, -300);
-    scene.add(b2);
 
     renderer = new THREE.WebGLRenderer({antialias: true});
     renderer.setPixelRatio(window.devicePixelRatio);
@@ -294,7 +288,7 @@ function init() {
 
 function key() {
 
-    if(PAUSE) return;
+
     if (keyboard.up("down") || keyboard.up("S")) {
         controls = false;
         AirplaneAnimations.down.stop();
@@ -307,10 +301,12 @@ function key() {
                 AirplaneAnimations.down.halt(0);
             }, 500);
             controls = true;
-        }
-        // Move
-        Airplane.translateZ(-0.5);
 
+        }
+        if (Math.degrees(PITCH) > -34) {
+            PITCH -= 0.02;
+            Airplane.rotateX(-0.02);
+        }
     }
 
     if (keyboard.up("up") || keyboard.up("W")) {
@@ -326,8 +322,12 @@ function key() {
             }, 500);
             controls = true;
         }
-        /// MOve
-        Airplane.translateZ(0.5);
+        if (Math.degrees(PITCH) < 34) {
+            PITCH += 0.02;
+            Airplane.rotateX(0.02);
+
+        }
+
     }
 
     if (keyboard.up("left") || keyboard.up("A")) {
@@ -335,8 +335,12 @@ function key() {
         AirplaneAnimations.left.stop();
     }
     if (keyboard.pressed("left") || keyboard.pressed("A")) {
+        // if(Math.degrees(dir) > -80) {
+        //
+        //     Airplane.rotateZ(-0.02);
+        //     dir -= 0.02;
+        // }
         Airplane.rotateY(-0.02);
-        dir -= 0.02;
         if (!controls) {
             AirplaneAnimations.left.reset();
             AirplaneAnimations.left.play();
@@ -359,8 +363,13 @@ function key() {
         AirplaneAnimations.right.stop();
     }
     if (keyboard.pressed("right") || keyboard.pressed("D")) {
+
+        // if(Math.degrees(dir) < 80){
+        // Airplane.rotateZ(0.02);
+        // dir += 0.02;
+        // }
         Airplane.rotateY(0.02);
-        dir += 0.02;
+
         if (!controls) {
             AirplaneAnimations.right.reset();
             AirplaneAnimations.right.play();
@@ -379,70 +388,141 @@ function key() {
     }
 
 
-    if (keyboard.pressed("E") && duration_AirplaneSpeed < 10) {
-        // console.log(duration_AirplaneSpeed);
-        duration_AirplaneSpeed -= 0.02;
-        AirplaneAnimations.spinner.setDuration(duration_AirplaneSpeed);
-    }
-
-    if (keyboard.pressed("R") && duration_AirplaneSpeed > 0) {
-        //console.log(duration_AirplaneSpeed);
-        duration_AirplaneSpeed += 0.02;
-        AirplaneAnimations.spinner.setDuration(duration_AirplaneSpeed);
-    }
-
-
     if (keyboard.pressed("M")) {
         Airplane.translateZ(5);
     }
 
 
     if (keyboard.pressed("J")) {
-        Airplane.rotateX(0.02);
+        camera.rotateZ(0.02);
     }
     if (keyboard.pressed("K")) {
-        Airplane.rotateX(-0.02);
+        camera.rotateZ(-0.02);
 
     }
-    keyboard.update();
-
+    if (PAUSE) return;
+    if (!PAUSE) keyboard.update();
 }
 
 
 function onWindowResize() {
-
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
-
     renderer.setSize(window.innerWidth, window.innerHeight);
-
 }
 
 
+/*************************** Island ***************************/
+function DrawIsland() {
+    var heightmapImage = new Image();
+    heightmapImage.src = 'images/heightmap.png';
+
+    function Settings(pos,okey) {
+        var that = this;
+        var blend;
+        var loader = new THREE.TextureLoader();
+        loader.load('images/sand1.jpg', function (t1) {
+            t1.wrapS = t1.wrapT = THREE.RepeatWrapping;
+            loader.load('images/grass1.jpg', function (t2) {
+                loader.load('images/stone1.jpg', function (t3) {
+                    loader.load('images/snow1.jpg', function (t4) {
+                        // t2.repeat.x = t2.repeat.y = 2;
+                        blend = THREE.Terrain.generateBlendedMaterial([
+                            {texture: t1},
+                            {texture: t2, levels: [10, 20, 40, 70]},
+                            {texture: t3, levels: [40, 70, 80, 120]},
+                            {
+                                texture: t4,
+                                glsl: '1.0 - smoothstep(65.0 + smoothstep(-256.0, 256.0, vPosition.x) * 10.0, 120.0, vPosition.z)'
+                            },
+                            {
+                                texture: t3,
+                                glsl: 'slope > 0.7853981633974483 ? 0.2 : 1.0 - smoothstep(0.47123889803846897, 0.7853981633974483, slope) + 0.2'
+                            }, // between 27 and 45 degrees
+                        ]);
+                        that.Regenerate();
+                    });
+                });
+            });
+        });
+        this.easing = 'Linear';
+        this.heightmap = 'HillIsland';
+        this.smoothing = 'None';
+        this.maxHeight = 100;
+        this.segments = webglExists ? 30 : 15;
+        this.steps = 1;
+        this.turbulent = false;
+        this.size = 2048;
+        this.texture = webglExists ? 'Blended' : 'Wireframe';
+        this.edgeDirection = 'Normal';
+        this.edgeType = 'Box';
+        this.edgeDistance = 512;
+        this.edgeCurve = 'EaseInOut';
+        this['width:length ratio'] = 1.0;
+        this['Flight mode'] = false;
+        this['Light color'] = '#' + light.color.getHexString();
+
+        window.rebuild = this.Regenerate = function () {
+            var s = parseInt(that.segments, 10);
+            var o = {
+                after: that.after,
+                easing: THREE.Terrain[that.easing],
+                heightmap: THREE.Terrain[that.heightmap],
+                material: blend,
+                maxHeight: that.maxHeight - 50,
+                minHeight: -20,
+                steps: that.steps,
+                stretch: true,
+                turbulent: that.turbulent,
+                useBufferGeometry: false,
+                xSize: that.size,
+                ySize: Math.round(that.size * that['width:length ratio']),
+                xSegments: s,
+                ySegments: Math.round(s * that['width:length ratio']),
+                _mesh: typeof terrainScene === 'undefined' ? null : terrainScene.children[0], // internal only
+            };
+            //scene.remove(terrainScene);
+            okey = THREE.Terrain(o);
+            okey.position.set(pos[0],pos[1],pos[2]);
+            scene.add(okey);
+        };
+
+    }
+
+    var terr = [];
+    var settings = new Settings([0,15,0], terr[0]);
+    var settings = new Settings([2000,15,0],terr[1]);
+
+}
+
+SPEED = Math.round(1.852 * (1 * (THROTTLE / 10) + 0.4) * 100);
+
 function animate() {
-
     requestAnimationFrame(animate);
-
     if (PAUSE) return;
-
     if (mixers.length > 0) {
 
         for (var i = 0; i < mixers.length; i++) {
             mixers[i].update(clock.getDelta());
         }
 
-        Airplane.translateZ(SPEED);
+        Airplane.translateZ(SPEED/185.2);
+        ALTITUDE = Math.round(Airplane.position.y * 3);
 
-        $('#altitude_value').html(Math.round(Airplane.position.y * 3));
-        $('#speed_value').html(Math.round(1.852 * SPEED * 100 * 2));
+
+        /***************** Write datas **********************/
+        $('#altitude_value').html(ALTITUDE);
+        $('#speed_value').html(SPEED);
+        $('.bottom-meter').css({"-webkit-transform": "translateY(" + Math.degrees(PITCH) + "px) rotate(" + Math.degrees(dir) + "deg)"});
+        $('#pitch').html(Math.round(Math.degrees(PITCH)) + "&deg;");
+        $('#roll').html(Math.round(Math.degrees(dir)) + "&deg;");
     }
 
     var time = performance.now() * 0.001;
     water.material.uniforms.time.value += 1.0 / 60.0;
+
     key();
     stats.update();
     renderer.render(scene, camera);
-
-
 }
 

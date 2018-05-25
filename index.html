@@ -28,7 +28,6 @@
 </div>
 
 
-
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script src="js/THREE_FBX.js"></script>
 <script src="js/inflate.js"></script>
@@ -39,6 +38,18 @@
 <script src="js/Water.js"></script>
 <script src="js/Sky.js"></script>
 <script src="js/libs/dat.gui.min.js"></script>
+
+
+<script src="js/CanvasRenderer.js"></script>
+<script src="js/Projector.js"></script>
+<script src="js/FirstPersonControls.js"></script>
+<script src="js/THREE.Terrain.min.js"></script>
+<script src="js/worley.js"></script>
+<script src="js/brownian.js"></script>
+<script src="js/gaussian.js"></script>
+<script src="js/weightedBoxBlurGaussian.js"></script>
+<script src="js/analysis.js"></script>
+
 
 <script>
     var value = 50;
@@ -72,13 +83,15 @@
         e.preventDefault();
         $('.loader').fadeOut(1000);
         $('.panel').fadeIn(2000);
+        SOUNDS.music.play();
+        SOUNDS.engine.play();
     });
 
     // Speaker mute
     $('.volicon').on('click', function (e) {
         $(this).toggleClass("fa-volume-up");
         $(this).toggleClass("fa-volume-off");
-        if ( SOUNDS.music &&  SOUNDS.music.isPlaying) {
+        if (SOUNDS.music && SOUNDS.music.isPlaying) {
             SOUNDS.music.pause();
         } else {
             SOUNDS.music.play();
@@ -96,7 +109,7 @@
         });
 
     $('#volume').on('change', function () {
-        if ( SOUNDS.music)  SOUNDS.music.setVolume($(this).val() / 100);
+        if (SOUNDS.music) SOUNDS.music.setVolume($(this).val() / 100);
     });
 
 
@@ -201,102 +214,104 @@
         SOUNDS.engine.pause();
         SOUNDS.music.pause();
     }
+
     function resueme() {
         PAUSE = !PAUSE;
         SOUNDS.engine.play();
         SOUNDS.music.play();
     }
+
     function pausing() {
-
-
+        if (PAUSE) {
+            resueme();
+            return;
+        }
+        pause();
     }
 
+
+    /*** Flouting speed ***/
+    var tmp_speed;
+    var timeout;
+
+    function speedup() {
+        if (tmp_speed > SPEED) {
+            SPEED++;
+            timeout = setTimeout(speedup, 100);
+        } else if (tmp_speed < SPEED) {
+            SPEED--;
+            timeout = setTimeout(speedup, 100);
+        } else {
+        }
+    }
+
+
+    function throttle() {
+        $('#throttle_value').html((THROTTLE * 10) + '%');
+        SOUNDS.engine.setPlaybackRate(THROTTLE / 10 + 0.3);
+
+        tmp_speed = Math.round(1.852 * (1 * (THROTTLE / 10) + 0.4) * 100);
+        if (timeout) clearTimeout(timeout);
+        speedup();
+
+        AirplaneAnimations.spinner.setDuration(10 - THROTTLE + 1);
+    }
+
+
     $(document).on("keydown", function (event) {
-        if(PAUSE) return;
-            // Up R
-            if (event.which == 82) {
-                if (THROTTLE >= 10) return;
-                $('.range').children().eq(THROTTLE).addClass('range-line-active');
-                THROTTLE++;
-                $('#throttle_value').html((THROTTLE * 10) + '%');
-                SOUNDS.engine.setPlaybackRate(THROTTLE / 10 + 0.3);
-
-            }
-            // Down E
-            if (event.which == 69) {
-                if (THROTTLE <= 0) return;
-                THROTTLE--;
-                $('.range').children().eq(THROTTLE).removeClass('range-line-active');
-                $('#throttle_value').html((THROTTLE * 10) + '%');
-                SOUNDS.engine.setPlaybackRate(THROTTLE / 10 + 0.3);
-
-            }
-            // Brake B
-            if (event.which == 66) {
-                $('#brake').find(".indicator").toggleClass('indicator-active indicator-deactive');
-            }
-            // Ignition I
-            if (event.which == 73) {
-                $('#ignition').find(".indicator").toggleClass('indicator-active indicator-deactive');
-            }
-
-            //  A
-            if (event.which == 65) {
-                if (ROLL > 84) return;
-                ROLL += 1;
-                $('.bottom-meter').css({"-webkit-transform": "translateY(" + PITCH + "px) rotate(" + ROLL + "deg)"});
-            }
-            //  D
-            if (event.which == 68) {
-                if (ROLL < -85) return;
-                ROLL -= 1;
-                $('.bottom-meter').css({"-webkit-transform": "translateY(" + PITCH + "px) rotate(" + ROLL + "deg)"});
-            }
-            //  W
-            if (event.which == 87) {
-                if (PITCH > 34) return;
-                PITCH += 1;
-                $('.bottom-meter').css({"-webkit-transform": "translateY(" + PITCH + "px) rotate(" + ROLL + "deg)"});
-
-            }
-            //  S
-            if (event.which == 83) {
-                if (PITCH < -34) return;
-                PITCH -= 1;
-                $('.bottom-meter').css({"-webkit-transform": "translateY(" + PITCH + "px) rotate(" + ROLL + "deg)"});
-
-            }
-
-            if (event.which == 80) {
-                if (PAUSE){
-                    resueme();
-                    return;
-                }
-                pause();
-            }
-        $('#pitch').html(PITCH + "&deg;");
-        $('#roll').html(ROLL + "&deg;");
+        //P Pause
+        if (event.which == 80) {
+            pausing();
+        }
+        if (PAUSE) return;
+        // Up R
+        if (event.which == 82) {
+            if (THROTTLE >= 10) return;
+            THROTTLE++;
+            $('.range').children().eq(THROTTLE - 1).toggleClass('range-line-active');
+            throttle();
+        }
+        // Down E
+        if (event.which == 69) {
+            if (THROTTLE <= 0) return;
+            THROTTLE--;
+            $('.range').children().eq(THROTTLE).toggleClass('range-line-active');
+            throttle();
+        }
+        // Brake B
+        if (event.which == 66) {
+            $('#brake').find(".indicator").toggleClass('indicator-active indicator-deactive');
+        }
+        // Ignition I
+        if (event.which == 73) {
+            $('#ignition').find(".indicator").toggleClass('indicator-active indicator-deactive');
+        }
     });
 
     $(document).ready(function () {
+        /*** set auto speed*/
+        if (THROTTLE > 0) {
+            for (var i = 0; i < THROTTLE; i++) {
+                $('.range').children().eq(i).toggleClass('range-line-active');
+
+            }
+            $('#throttle_value').html((THROTTLE * 10) + '%');
+        }
+
+        // Brake && Ignition
         $('.info_circle').on('click', function () {
             $(this).find(".indicator").toggleClass('indicator-active indicator-deactive');
         });
 
         $('#pause-btn').on('click', function () {
-           console.log('Paused');
-            if (PAUSE){
-                resueme();
-                return;
-            }
-            keyboard.destroy();
-            pause();
+            pausing();
+
         });
 
         // Engine Sound
         $('#engine').on('change', function () {
-            if(SOUNDS.engine){
-                if ($(this).is(":checked")){
+            if (SOUNDS.engine) {
+                if ($(this).is(":checked")) {
                     SOUNDS.engine.play();
                     return;
                 }
@@ -305,8 +320,8 @@
         });
         // Effect Sound
         $('#effects').on('change', function () {
-            if(SOUNDS.effects){
-                if ($(this).is(":checked")){
+            if (SOUNDS.effects) {
+                if ($(this).is(":checked")) {
                     SOUNDS.effects.play();
                     return;
                 }
@@ -315,7 +330,7 @@
         });
         // Music Sound
         $('#music').on('change', function () {
-            if( SOUNDS.music){
+            if (SOUNDS.music) {
                 $('.volicon').click();
             }
         });
