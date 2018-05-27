@@ -397,3 +397,160 @@ label, input{
     padding: 0;
     margin: 0;
 }
+
+.timer{
+    display: none;
+    position: absolute;
+    font-family: 'Black Han Sans', sans-serif;
+    color: white;
+    left: 5%;
+    top: 1%;
+    font-size: 30px;
+
+}
+/************************** Game Over ****************************/
+.game-over,.game-win{
+    z-index: 999999999999999;
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    border: 20px solid red;
+    background-color: #616161;
+    opacity: 0.8;
+}
+
+
+@keyframes as {
+    0% {
+        opacity: 0;
+    }
+    10% {
+        opacity: .3;
+    }
+    20% {
+        opacity: .1;
+    }
+    30% {
+        opacity: .5;
+    }
+    40% {
+        opacity: 0;
+    }
+    50% {
+        opacity: .8;
+    }
+    55% {
+        opacity: 0;
+    }
+    55% {
+        opacity: 0;
+    }
+}
+
+@keyframes asd {
+    0% {
+        top: -20%;
+    }
+    100% {
+        top: 100%;
+    }
+}
+
+.blinking {
+    z-index: 3;
+    position: absolute;
+    font: bold 200px/200px Arial, sans-serif;
+    left: 50%;
+    top: 50%;
+    margin-top: -200px;
+    width: 100%;
+    margin-left: -50%;
+    height: 200px;
+    text-align: center;
+    color: transparent;
+    text-shadow: 0 0 30px rgba(0, 0, 0, .8);
+    animation: asdd 2s linear infinite;
+}
+
+.try-again, .game-menu{
+    float: left;
+    margin:  0 10px;
+    border: 10px solid white;
+    padding: 10px 20px 10px 20px;
+    opacity: 0.6;
+
+}
+
+.try-again:hover, .game-menu:hover{
+    opacity:1;
+    cursor: pointer;
+}
+
+@keyframes asdd {
+    0% {
+        text-shadow: 0 0 30px rgba(0, 0, 0, .8);
+    }
+    33% {
+        text-shadow: 0 0 10px rgba(0, 0, 0, .6);
+    }
+    66% {
+        text-shadow: 0 0 20px rgba(0, 0, 0, .4);
+    }
+    100% {
+        text-shadow: 0 0 40px rgba(0, 0, 0, 1);
+    }
+}
+
+.game-btn-container{
+    font-family: 'Black Han Sans', sans-serif;
+    color: white;
+    font-size: 50px;
+    z-index: 3;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -0%);
+    margin-top: 50px;
+    margin-left: auto;
+}
+/***************** START PAGE ****************/
+
+.index-start{
+    font-family: 'Black Han Sans', sans-serif;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: url("../images/index-bg.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    color: white;
+}
+
+.index-play{
+    position: absolute;
+    font-size: 7em;
+    padding: 30px 5%;
+    border: 10px solid #d3d3d3;
+    cursor: pointer;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: bolder;
+    color: #d3d3d3;
+}
+.index-play:hover{
+    color: white;
+    border-color: white;
+}
+.autor{
+    position: absolute;
+    bottom: 2%;
+    right: 2%;
+    font-size: 20px;
+    font-style: italic;
+}

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Airplane Lesson 2</title>
+    <meta charset="utf-8">
+    <link rel="shortcut icon"
+          href="https://cdn1.iconfinder.com/data/icons/shopping-colored-icons-vol-1/128/P-1-61-512.png">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Black+Han+Sans" rel="stylesheet">
+</head>
+
+<body>
+<div class="timer">
+    <div style="width: 250px; float: left;">TARGETS <span id="targets">10/10</span></div><div style="width: 200px; float: left">TIME <span id="time">1:20</span></div>
+</div>
+<div class="speaker">
+    <span class="fa fa-volume-up volicon">&nbsp;</span><br>
+    <input type="range" min="1" max="100" value="50" class="volume" id="volume">
+</div>
+<div class="loader">
+    <div class="play">
+        <h1 align="center" id="play">Play</h1>
+    </div>
+    <div class="animated">
+        <div style="opacity: .7; background-color: #004466" class="progress">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="15"
+                 aria-valuemin="0" aria-valuemax="100" style="width:0%"></div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="js/THREE_FBX.js"></script>
+<script src="js/inflate.js"></script>
+<script src="js/KeyboardState.js"></script>
+<script src="js/FBXLoader.js"></script>
+<script src="js/Detector.js"></script>
+<script src="js/stat.js"></script>
+<script src="js/Water.js"></script>
+<script src="js/Sky.js"></script>
+<script src="js/libs/dat.gui.min.js"></script>
+
+
+<script src="js/CanvasRenderer.js"></script>
+<script src="js/Projector.js"></script>
+<script src="js/FirstPersonControls.js"></script>
+<script src="js/THREE.Terrain.min.js"></script>
+<script src="js/worley.js"></script>
+<script src="js/brownian.js"></script>
+<script src="js/gaussian.js"></script>
+<script src="js/weightedBoxBlurGaussian.js"></script>
+<script src="js/analysis.js"></script>
+<script src="js/analysis.js"></script>
+
+
+<script>
+    var value = 50;
+    var THROTTLE = 5
+
+    function setLoading(percentVal) {
+        var bar = $('.progress-bar-animated');
+        var percentVal = percentVal + '%';
+        bar.width(percentVal);
+        if (percentVal == '100%') {
+            setTimeout(function () {
+                $('.play').show();
+
+            }, 500);
+        }
+
+    }
+
+    var script = document.createElement('script');
+    script.src = "js/logic/model.js"
+    document.body.appendChild(script);
+    $('.loader').show();
+    setLoading(value);
+
+    script.onload = function () {
+        // после выполнения скрипта становится доступна функция _
+        //alert( "hioio" ); // её код
+    }
+
+    // Play button
+    $('#play').on('click', function (e) {
+        e.preventDefault();
+        $('.loader').fadeOut(1000);
+        $('.timer').fadeIn(1000);
+        $('.panel').fadeIn(2000);
+        SOUNDS.music.play();
+        SOUNDS.engine.play();
+        start_camera();
+    });
+
+    // Speaker mute
+    $('.volicon').on('click', function (e) {
+        $(this).toggleClass("fa-volume-up");
+        $(this).toggleClass("fa-volume-off");
+        if (SOUNDS.music && SOUNDS.music.isPlaying) {
+            SOUNDS.music.pause();
+        } else {
+            SOUNDS.music.play();
+        }
+        $('#music').prop('checked', SOUNDS.music.isPlaying);
+    });
+
+    // Speaker show range
+    $('.speaker')
+        .mouseover(function () {
+            $('#volume').show();
+        })
+        .mouseout(function () {
+            $('#volume').hide();
+        });
+
+    $('#volume').on('change', function () {
+        if (SOUNDS.music) SOUNDS.music.setVolume($(this).val() / 100);
+    });
+
+
+</script>
+
+<footer class="panel">
+    <div class="footer-container">
+        <div class="boxes" id="pause-btn">
+            <div class="info_circle">
+                <div class="pause-btn"></div>
+            </div>
+            <span>&nbsp;PAUSE</span>
+        </div>
+        <div class="boxes">
+            <div class="info_circle" id="brake">
+                <div class="indicator indicator-deactive"></div>
+            </div>
+            <span>&nbsp;BRAKE</span>
+        </div>
+        <div class="boxes">
+            <div class="info_circle" id="ignition">
+                <div class="indicator indicator-deactive"></div>
+            </div>
+            <span>IGNITION</span>
+        </div>
+
+        <div class="boxes" style="width: 205px;">
+            <div class="range">
+                <div class="range-line"></div>
+                <div class="range-line"></div>
+                <div class="range-line"></div>
+                <div class="range-line"></div>
+                <div class="range-line"></div>
+                <div class="range-line"></div>
+                <div class="range-line"></div>
+                <div class="range-line"></div>
+                <div class="range-line"></div>
+                <div class="range-line"></div>
+            </div>
+
+            <div class="boxes">
+                <span>THROTTLE</span><br>
+                <span id="throttle_value">0%</span>
+            </div>
+        </div>
+
+        <div class="boxes" style="width: 140px;">
+            <span>SPEED</span><br>
+            <span id="speed_value">1 </span>KTS
+        </div>
+
+
+        <div class="compass-container">
+            <div class="compass">
+                <div class="arrow"></div>
+                <div class="disc" id="compassDiscImg"></div>
+            </div>
+        </div>
+
+
+        <div class="boxes" style="width: 140px;">
+            <span>ALTITUDE</span><br>
+            <span id="altitude_value">700 </span>FT
+        </div>
+
+        <div class="compass-container">
+            <div class="compass">
+                <div class="disc-meter"></div>
+                <div class="bottom-meter"></div>
+            </div>
+        </div>
+
+        <div class="boxes" style=" width: 100px;">
+            <span id="roll" style="display: inline-block; width: 30px">0&deg;</span> ROLL<br>
+            <span id="pitch" style="display: inline-block; width: 30px">0&deg;</span> <span>PITCH</span>
+        </div>
+
+        <div class="boxes">
+            <label class="switch">
+                <input type="checkbox" checked id="music">
+                <span class="switch-slider round"></span>
+            </label> <span class="music-switch-text">MUSIC</span>
+            <br>
+            <label class="switch">
+                <input type="checkbox" checked id="engine">
+                <span class="switch-slider round"></span>
+            </label> <span class="music-switch-text">ENGINE</span>
+            <br>
+            <label class="switch">
+                <input type="checkbox" checked id="effects">
+                <span class="switch-slider round"></span>
+            </label>
+            <span class="music-switch-text">EFFECTS</span>
+            <br>
+        </div>
+    </div>
+
+</footer>
+<div class="game-over">
+    <h1 class="blinking">Game Over</h1>
+    <div class="game-btn-container">
+        <div class="try-again" onclick="location.reload();">TRY AGAIN</div>
+    </div>
+</div>
+<div class="game-win">
+    <h1 class="blinking">YOU WIN!</h1>
+    <div class="game-btn-container">
+        <div class="try-again" onclick="location.reload();">TRY AGAIN</div>
+        <div class="game-menu" onclick="location.reload();">MENU</div>
+    </div>
+</div>
+<script>
+    function pause() {
+        PAUSE = !PAUSE;
+        SOUNDS.engine.pause();
+        SOUNDS.music.pause();
+    }
+
+    function resueme() {
+        PAUSE = !PAUSE;
+        SOUNDS.engine.play();
+        SOUNDS.music.play();
+    }
+
+    function pausing() {
+        if (PAUSE) {
+            resueme();
+            return;
+        }
+        pause();
+    }
+
+    /****** Levels ******/
+    sessionStorage['Level1'] = 'true';
+    sessionStorage['Level2'] = 'false';
+    sessionStorage['Level3'] = 'false';
+
+    /*** Flouting speed ***/
+    var tmp_speed;
+    var timeout;
+    /***********Engine*************/
+    var ENGINE = true;
+
+    function speedup() {
+        if (tmp_speed > SPEED && ENGINE) {
+            SPEED++;
+            timeout = setTimeout(speedup, 100);
+        } else if (tmp_speed < SPEED && ENGINE) {
+            SPEED--;
+            timeout = setTimeout(speedup, 100);
+        } else {
+            if(THROTTLE == 0 && !ENGINE && GROUP.position.y > -100 ){
+                if(SPEED > 0) SPEED--;
+                if (Math.degrees(PITCH) < 34) {
+                    PITCH += 0.08;
+                    camera.rotateX(0.02);
+                    GROUP2.rotateX(0.04);
+                }
+                timeout = setTimeout(speedup, 100);
+            }
+        }
+    }
+
+
+    function throttle() {
+        $('#throttle_value').html((THROTTLE * 10) + '%');
+        SOUNDS.engine.setPlaybackRate(THROTTLE / 10 + 0.3);
+
+        tmp_speed = Math.round(1.852 * (1 * (THROTTLE / 10) + 0.4) * 100);
+        if (timeout) clearTimeout(timeout);
+        speedup();
+
+        AirplaneAnimations.spinner.setDuration((10 - THROTTLE + 1));
+    }
+
+
+    $(document).on("keydown", function (event) {
+        //P Pause
+        if (event.which == 80) {
+            pausing();
+        }
+        if (PAUSE) return;
+        // Up R
+        if (event.which == 82) {
+            if (THROTTLE >= 10 ||  !ENGINE) return;
+            THROTTLE++;
+            $('.range').children().eq(THROTTLE - 1).toggleClass('range-line-active');
+            throttle();
+        }
+        // Down E
+        if (event.which == 69) {
+            if (THROTTLE <= 0 || !ENGINE) return;
+            THROTTLE--;
+            $('.range').children().eq(THROTTLE).toggleClass('range-line-active');
+            throttle();
+        }
+        // Brake B
+        if (event.which == 66) {
+            $('#brake').find(".indicator").toggleClass('indicator-active indicator-deactive');
+        }
+        // Ignition I
+        if (event.which == 73) {
+            $('#ignition').find(".indicator").toggleClass('indicator-active indicator-deactive');
+            if(ENGINE){ engineOff();}else {
+                engineON();
+            }
+        }
+    });
+
+    function engineOff() {
+        if(THROTTLE > 0){
+            SPEED--;
+            THROTTLE --;
+            $('.range').children().eq(THROTTLE).toggleClass('range-line-active');
+            throttle();
+        }
+        if (THROTTLE != 0) {
+            setTimeout(engineOff, 200);
+        }else { SOUNDS.engine.pause();  AirplaneAnimations.spinner.halt(0); ENGINE = false;}
+    }
+    function engineON() {
+        SOUNDS.engine.play();
+        SOUNDS.engine.setPlaybackRate(0.3);
+        AirplaneAnimations.spinner.reset();
+        AirplaneAnimations.spinner.play();
+        ENGINE = true;
+    }
+
+    $(document).ready(function () {
+        /*** set auto speed*/
+        if (THROTTLE > 0) {
+            for (var i = 0; i < THROTTLE; i++) {
+                $('.range').children().eq(i).toggleClass('range-line-active');
+            }
+            $('#throttle_value').html((THROTTLE * 10) + '%');
+        }
+
+        // Brake && Ignition
+        $('.info_circle').on('click', function () {
+            $(this).find(".indicator").toggleClass('indicator-active indicator-deactive');
+        });
+
+        $('#pause-btn').on('click', function () {
+            pausing();
+        });
+
+        $('#ignition').on('click', function () {
+            if(ENGINE){ engineOff();}else {
+                engineON();
+            }
+        });
+
+        // Engine Sound
+        $('#engine').on('change', function () {
+            if (SOUNDS.engine) {
+                if ($(this).is(":checked")) {
+                    SOUNDS.engine.play();
+                    return;
+                }
+                SOUNDS.engine.pause();
+            }
+        });
+        // Effect Sound
+        $('#effects').on('change', function () {
+            if (SOUNDS.effects) {
+                if ($(this).is(":checked")) {
+                    SOUNDS.effects.setVolume(1);
+                    return;
+                }
+                SOUNDS.effects.setVolume(0);
+            }
+        });
+        // Music Sound
+        $('#music').on('change', function () {
+            if (SOUNDS.music) {
+                $('.volicon').click();
+            }
+        });
+
+
+    });
+
+</script>
+
+</body>
+</html>
+

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Airplane Menu</title>
+    <link rel="shortcut icon"
+          href="https://cdn1.iconfinder.com/data/icons/shopping-colored-icons-vol-1/128/P-1-61-512.png">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Black+Han+Sans" rel="stylesheet">
+    <style>
+        .menu-container{
+            position: absolute;
+            width: 100%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 10px;
+        }
+        .box-container{
+            width: 100%;
+            height: 100%;
+            background: #5b5b5b;
+            border-radius: 20px;
+            -webkit-box-shadow: -1px 2px 22px 10px rgba(143,137,143,1);
+            -moz-box-shadow: -1px 2px 22px 10px rgba(143,137,143,1);
+            box-shadow: -1px 2px 22px 10px rgba(143,137,143,1);
+        }
+        .menu-box{
+            height: 600px;
+            border: 20px solid transparent;
+            padding: 5px 10px;
+        }
+        .menu-box img{
+            max-width: 100%;
+        }
+        .menu-lesson{
+            text-align: center;
+            font-family: 'Black Han Sans', sans-serif;
+            font-size: 40px;
+        }
+        .menu-title{
+            margin: 20px 0;
+        }
+        .menu-describe{
+            text-align: center;
+            font-family: 'Black Han Sans', sans-serif;
+            font-size: 20px;
+        }
+        .lesson-start{
+            margin: 50px 0px;
+            text-align: center;
+            font-family: 'Black Han Sans', sans-serif;
+            font-size: 40px;
+            border: 5px solid white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .lesson-start:hover{
+            opacity: .7;
+        }
+
+    </style>
+</head>
+<body>
+<div class="menu-container">
+
+        <div class="row">
+
+            <div class="col-md-4 menu-box">
+                <div class="box-container">
+                    <div class="menu-box">
+                    <div class="menu-lesson">LESSON 1</div>
+                    <img src="images/menu/lesson1.png">
+                    <div class="menu-lesson menu-title">Naval Aviator</div>
+                    <div class="menu-describe">Basic flight control</div>
+                        <div class="lesson-start" onclick="window.location.replace('lesson1.html')">Start</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 menu-box">
+                <div class="box-container">
+                    <div class="menu-box">
+                    <div class="menu-lesson">LESSON 2</div>
+                    <img src="images/menu/lesson2.png">
+                    <div class="menu-lesson menu-title">Army Aviator</div>
+                    <div class="menu-describe">Demonstrating the takeoff procedure</div>
+                        <div class="lesson-start" onclick="window.location.replace('lesson2.html')">Start</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 menu-box">
+                <div class="box-container">
+                    <div class="menu-box">
+                    <div class="menu-lesson">LESSON 3</div>
+                    <img src="images/menu/lesson3.png">
+                    <div class="menu-lesson menu-title">Air Force</div>
+                    <div class="menu-describe">Navigation in foggy weather</div>
+                        <div class="lesson-start" onclick="window.location.replace('lesson3.html')">Start</div>
+                    </div>
+                </div>
+            </div>
+
+
+</div>
+</div>
+</body>
+</html>

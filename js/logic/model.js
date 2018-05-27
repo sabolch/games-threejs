@@ -20,15 +20,36 @@ if (/&?webgl=0\b/g.test(location.hash)) {
 
 if (!Detector.webgl) Detector.addGetWebGLMessage();
 
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+}
+
 Math.degrees = function (radians) {
     return radians * 180 / Math.PI;
 };
+
+function sec2str(t){
+    var d = Math.floor(t/86400),
+        h = ('0'+Math.floor(t/3600) % 24).slice(-2),
+        m = ('0'+Math.floor(t/60)%60).slice(-2),
+        s = ('0' + t % 60).slice(-2);
+    return (d>0?d+'d ':'')+(h>0?h+':':'')+(m>0?m+':':'')+(t>60?s:s+'s');
+}
+/*********************************************************************/
+/**************************** Varriables *****************************/
+/*********************************************************************/
 var PAUSE = false;
-var THROTTLE = 5, ROLL = 0, PITCH = 0, SPEED = 1, ALTITUDE = 0;
+var ROLL = 0, PITCH = 0, SPEED = 1, ALTITUDE = 0;
 var SOUNDS = {};
 var keyboard;
+var TARGETS = 10;
+var TIME = 120;
 
-var terrainScene;
+var collidableMeshList = [];
+
+var terrainScene, ISLANDS = [];
+
+var GROUP, GROUP2;
 
 var dir = 0;
 var container, stats, controls;
@@ -38,16 +59,19 @@ var Airplane;
 var clock = new THREE.Clock();
 
 var mixers = [];
+var action;
+var AirplaneAnimations = {};
 
+var FCONTROLL;
+
+/*********************************************************************/
+/************************** Init Functions ************************/
+/*********************************************************************/
 
 init();
 DrawIsland();
 animate();
 
-var action;
-var duration_AirplaneSpeed = 2;
-
-var AirplaneAnimations = {};
 
 function init() {
 
@@ -64,7 +88,9 @@ function init() {
     //scene.fog = new THREE.Fog(0xa0a0a0, 20, 100);
 
 
-    //// Sounds
+    /*********************************************************************/
+    /******************************** Sounds *****************************/
+    /*********************************************************************/
 
     var listener = new THREE.AudioListener();
     camera.add(listener);
@@ -72,7 +98,7 @@ function init() {
     var audioLoader = new THREE.AudioLoader();
 
     SOUNDS.music = new THREE.Audio(listener);
-    audioLoader.load('sounds/Somber.ogg', function (buffer) {
+    audioLoader.load('sounds/music.ogg', function (buffer) {
         SOUNDS.music.setBuffer(buffer);
         SOUNDS.music.setLoop(true);
         SOUNDS.music.setVolume(0.5);
@@ -87,6 +113,13 @@ function init() {
         SOUNDS.engine.setVolume(1.5);
     });
 
+    SOUNDS.effects = new THREE.Audio(listener);
+    audioLoader.load('sounds/ring.mp3', function (buffer) {
+        SOUNDS.effects.setBuffer(buffer);
+        SOUNDS.effects.setLoop(false);
+        SOUNDS.effects.setVolume(1);
+    });
+
     // var sound1 = new THREE.PositionalAudio( listener );
     // audioLoader.load( 'sounds/358232_j_s_song.ogg', function( buffer ) {
     //     sound1.setBuffer( buffer );
@@ -95,6 +128,8 @@ function init() {
     // });
     // mesh1.add( sound1 );
 
+    /*********************************************************************/
+    /************************** Lighting Settings ************************/
     /*********************************************************************/
     light = new THREE.DirectionalLight(0xffffff);
     light.position.set(0, 200, 100);
@@ -105,7 +140,10 @@ function init() {
     light.shadow.camera.right = 120;
     scene.add(light);
 
-    /************************************ Loader manager *********************/
+
+    /*********************************************************************/
+    /***************************** Loader manager ************************/
+    /*********************************************************************/
 
     var manager = new THREE.LoadingManager();
     manager.onStart = function (url, itemsLoaded, itemsTotal) {
@@ -126,6 +164,9 @@ function init() {
         // console.log('There was an error loading ' + url);
     };
 
+    /**************************************************************/
+    /******************** FXB LOADER LOAD OBJECT ******************/
+    /**************************************************************/
     var loader = new THREE.FBXLoader(manager);
     loader.load('models/ok2.fbx',
 
@@ -151,16 +192,43 @@ function init() {
             });
             Airplane = object;
             Airplane.position.set(0, 100, 0);
-            Airplane.scale.set(0.05, 0.05, 0.05);
-            Airplane.add(camera);
+            Airplane.scale.set(5, 5, 5);
+
             scene.add(Airplane);
-            camera.position.set(0, 150, -400);
+
+            // Airplane.add(camera);
+            camera.position.set(0, 110, -200);
             camera.rotateY(Math.PI);
-            camera.rotateX(-Math.PI / 8);
+            camera.rotateX(-Math.PI / 10);
+            // camera.rotateX(Math.PI / 16);
+
+
+            GROUP2 = new THREE.Object3D();
+            GROUP2.scale.set(0.01, 0.01, 0.01);
+            GROUP2.position.set(0, 100, -20);
+            GROUP2.add(Airplane);
+
+            GROUP = new THREE.Object3D();
+            GROUP.position.set(0, 100, 0);
+            // GROUP.add(Airplane);
+            GROUP.add(GROUP2);
+            GROUP.add(camera);
+            scene.add(GROUP);
+
+            //
+            // FCONTROLL = new THREE.FlyControls( Airplane );
+            // FCONTROLL.movementSpeed = 1000;
+            // FCONTROLL.domElement = renderer.domElement;
+            // FCONTROLL.rollSpeed = Math.PI / 24;
+            // FCONTROLL.autoForward = false;
+            // FCONTROLL.dragToLook = false;
 
         }
     );
 
+    /**************************************************************/
+    /************************ Render Setup ************************/
+    /**************************************************************/
     renderer = new THREE.WebGLRenderer({antialias: true});
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -168,9 +236,9 @@ function init() {
     container.appendChild(renderer.domElement);
 
 
-    /************************************************************/
-
-    // Water
+    /**************************************************************/
+    /************************ Cerate Ocean ************************/
+    /**************************************************************/
     var waterGeometry = new THREE.CircleGeometry(10000, 16);
     water = new THREE.Water(
         waterGeometry,
@@ -223,7 +291,9 @@ function init() {
     //
 
 
-    // GUI
+    /**************************************************************/
+    /************************ GUI Controll ************************/
+    /**************************************************************/
     var gui = new dat.GUI();
     var folder = gui.addFolder('Sky');
     folder.add(parameters, 'inclination', 0, 0.5, 0.0001).onChange(updateSun);
@@ -243,6 +313,10 @@ function init() {
     stats = new Stats();
     container.appendChild(stats.dom);
 
+
+    /**************************************************************/
+    /****************** Activate Animations ***********************/
+    /**************************************************************/
     setTimeout(function () {
         //console.log(Airplane.animations[0].tracks);
         //var walkClip = THREE.AnimationUtils.splitClip( Airplane.animations[ 0 ], 'walk', 0, 1 );
@@ -278,7 +352,6 @@ function init() {
         AirplaneAnimations.left.setLoop(1, 0);
         AirplaneAnimations.left.setDuration(1);
 
-
         AirplaneAnimations.spinner = Airplane.mixer.clipAction(spinner).play();
 
     }, 3000);
@@ -286,13 +359,72 @@ function init() {
 
 }
 
+
+var camera_timer;
+var camera_rotate = 0;
+
+function camera_fexing() {
+
+    if (Math.round(camera_rotate * 1000) > 0) {
+        camera.rotateX(-0.001);
+        camera_rotate -= 0.001;
+        camera.translateY(-0.001);
+        camera_timer = setTimeout(camera_fexing, 1);
+
+    } else if (Math.round(camera_rotate * 1000) < 0) {
+        camera.rotateX(0.001);
+        camera_rotate += 0.001;
+        camera.translateY(0.001);
+
+        camera_timer = setTimeout(camera_fexing, 1);
+    } else {
+    }
+    console.log(Math.round(camera_rotate * 1000));
+
+}
+
+
+function start_camera() {
+    camera.position.z += 2;
+    if (camera.position.z < -50) {
+        setTimeout(start_camera, 5);
+    }
+}
+
+
+function forces() {
+    var pitch = Math.round(Math.degrees(PITCH));
+    var roll = Math.round(Math.degrees(dir));
+
+    if (pitch < 0) {
+        GROUP.translateY(-pitch / 100);
+    } else if (pitch > 0) {
+        GROUP.translateY(-pitch / 100);
+    } else {
+    }
+
+    if (roll < 0) {
+        GROUP.rotateY(-0.0001 - (roll / 10000));
+        ROLL -= -0.0001 - (roll / 10000);
+
+    } else if (roll > 0) {
+        GROUP.rotateY(0.0001 - (roll / 10000));
+        ROLL += 0.0001 - (roll / 10000);
+    } else {
+    }
+}
+
 function key() {
-
-
+    if (PAUSE) return;
+    forces();
+    /************************************************************/
+    /************************ FEL *******************************/
+    /************************************************************/
     if (keyboard.up("down") || keyboard.up("S")) {
         controls = false;
         AirplaneAnimations.down.stop();
     }
+
     if (keyboard.pressed("down") || keyboard.pressed("S")) {
         if (!controls) {
             AirplaneAnimations.down.reset();
@@ -301,17 +433,24 @@ function key() {
                 AirplaneAnimations.down.halt(0);
             }, 500);
             controls = true;
-
         }
+
         if (Math.degrees(PITCH) > -34) {
-            PITCH -= 0.02;
-            Airplane.rotateX(-0.02);
+            if (ENGINE) {
+                PITCH -= 0.008;
+                GROUP2.rotateX(-0.004);
+                camera.rotateX(-0.002);
+            }
         }
-    }
 
+    }
+    /************************************************************/
+    /************************ LE ********************************/
+    /************************************************************/
     if (keyboard.up("up") || keyboard.up("W")) {
         controls = false;
         AirplaneAnimations.up.stop();
+
     }
     if (keyboard.pressed("up") || keyboard.pressed("W")) {
         if (!controls) {
@@ -323,24 +462,52 @@ function key() {
             controls = true;
         }
         if (Math.degrees(PITCH) < 34) {
-            PITCH += 0.02;
-            Airplane.rotateX(0.02);
-
+            if (ENGINE){
+                PITCH += 0.008;
+            camera.rotateX(0.002);
+            GROUP2.rotateX(0.004);
+            }
         }
-
     }
 
+    /************************************************************/
+    /************************ BALRA *****************************/
+    /************************************************************/
     if (keyboard.up("left") || keyboard.up("A")) {
+        controls = false;
+        AirplaneAnimations.right.stop();
+
+    }
+    if (keyboard.pressed("left") || keyboard.pressed("A")) {
+        if (Math.degrees(dir) > -35) {
+            dir -= 0.008;
+            Airplane.rotateZ(-0.008);
+        }
+
+        // console.log("  X : " + Math.round(Airplane.position.x) + "|  Y : " + Math.round(Airplane.position.y) + "|  Z : " + Math.round(Airplane.position.z));
+        if (!controls) {
+            AirplaneAnimations.right.reset();
+            AirplaneAnimations.right.play();
+            setTimeout(function () {
+                AirplaneAnimations.right.halt(0);
+            }, 700);
+            controls = true;
+        }
+    }
+
+    /************************************************************/
+    /************************ JOBBRA ****************************/
+    /************************************************************/
+
+    if (keyboard.up("right") || keyboard.up("D")) {
         controls = false;
         AirplaneAnimations.left.stop();
     }
-    if (keyboard.pressed("left") || keyboard.pressed("A")) {
-        // if(Math.degrees(dir) > -80) {
-        //
-        //     Airplane.rotateZ(-0.02);
-        //     dir -= 0.02;
-        // }
-        Airplane.rotateY(-0.02);
+    if (keyboard.pressed("right") || keyboard.pressed("D")) {
+        if (Math.degrees(dir) < 35) {
+            dir += 0.008;
+            Airplane.rotateZ(0.008);
+        }
         if (!controls) {
             AirplaneAnimations.left.reset();
             AirplaneAnimations.left.play();
@@ -350,60 +517,26 @@ function key() {
             controls = true;
         }
 
-
-        var compassDisc = document.getElementById("compassDiscImg");
-        compassDisc.style.webkitTransform = "rotate(" + Math.degrees(dir) + "deg)";
-        compassDisc.style.MozTransform = "rotate(" + Math.degrees(dir) + "deg)";
-        compassDisc.style.transform = "rotate(" + Math.degrees(dir) + "deg)";
     }
 
-
-    if (keyboard.up("right") || keyboard.up("D")) {
-        controls = false;
-        AirplaneAnimations.right.stop();
-    }
-    if (keyboard.pressed("right") || keyboard.pressed("D")) {
-
-        // if(Math.degrees(dir) < 80){
-        // Airplane.rotateZ(0.02);
-        // dir += 0.02;
-        // }
-        Airplane.rotateY(0.02);
-
-        if (!controls) {
-            AirplaneAnimations.right.reset();
-            AirplaneAnimations.right.play();
-            setTimeout(function () {
-                AirplaneAnimations.right.halt(0);
-            }, 700);
-            controls = true;
-        }
-
-        var compassDisc = document.getElementById("compassDiscImg");
-        compassDisc.style.webkitTransform = "rotate(" + Math.degrees(dir) + "deg)";
-        compassDisc.style.MozTransform = "rotate(" + Math.degrees(dir) + "deg)";
-        compassDisc.style.transform = "rotate(" + Math.degrees(dir) + "deg)";
-
-
-    }
-
+    /************************************************************/
+    /************************ TESTEL ****************************/
+    /************************************************************/
 
     if (keyboard.pressed("M")) {
         Airplane.translateZ(5);
     }
 
-
     if (keyboard.pressed("J")) {
-        camera.rotateZ(0.02);
+        // camera.rotateX(0.02);
+
     }
     if (keyboard.pressed("K")) {
-        camera.rotateZ(-0.02);
+        console.log(GROUP.position);
 
     }
-    if (PAUSE) return;
-    if (!PAUSE) keyboard.update();
-}
 
+}
 
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -411,13 +544,15 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-
+/**************************************************************/
 /*************************** Island ***************************/
+
+/**************************************************************/
 function DrawIsland() {
     var heightmapImage = new Image();
     heightmapImage.src = 'images/heightmap.png';
 
-    function Settings(pos,okey) {
+    function Settings(pos, okey) {
         var that = this;
         var blend;
         var loader = new THREE.TextureLoader();
@@ -483,46 +618,121 @@ function DrawIsland() {
             };
             //scene.remove(terrainScene);
             okey = THREE.Terrain(o);
-            okey.position.set(pos[0],pos[1],pos[2]);
+            okey.position.set(pos[0], pos[1], pos[2]);
             scene.add(okey);
         };
 
     }
 
-    var terr = [];
-    var settings = new Settings([0,15,0], terr[0]);
-    var settings = new Settings([2000,15,0],terr[1]);
+    var settings = new Settings([0, 15, 0], ISLANDS[0]);
+    var settings = new Settings([2000, 15, 1000], ISLANDS[1]);
 
+
+    /*** Darw  Targets ***/
+    for (var i = 0; i < TARGETS; i++) {
+        var geometry = new THREE.TorusGeometry(9, 4, 16, 32);
+        var material = new THREE.MeshBasicMaterial({
+            color: 0xffff00,
+            map: new THREE.TextureLoader().load('images/torus.jpg')
+        });
+        var torus = new THREE.Mesh(geometry, material);
+        torus.position.set(getRandomInt(-2000, 2000), getRandomInt(110, 300), getRandomInt((-i - 100)-1500, (i + 100) + 1500));
+        scene.add(torus);
+        collidableMeshList.push(torus);
+    }
 }
 
+
 SPEED = Math.round(1.852 * (1 * (THROTTLE / 10) + 0.4) * 100);
+/**************************************************************/
+/*************************** ANIMATE **************************/
+
+/**************************************************************/
+
+function removeA(array, element) {
+    const index = array.indexOf(element);
+    if (index !== -1) {
+        array.splice(index, 1);
+    }
+}
+
 
 function animate() {
+    var delta = clock.getDelta(); // seconds.
     requestAnimationFrame(animate);
     if (PAUSE) return;
     if (mixers.length > 0) {
 
         for (var i = 0; i < mixers.length; i++) {
-            mixers[i].update(clock.getDelta());
+            mixers[i].update(delta);
         }
 
-        Airplane.translateZ(SPEED/185.2);
-        ALTITUDE = Math.round(Airplane.position.y * 3);
+        if(SPEED != 0) GROUP.translateZ(SPEED / 185.2);
 
+        // Altitude
+        ALTITUDE = Math.round(GROUP.position.y * 3) + 300;
 
-        /***************** Write datas **********************/
+        /**************************************************************/
+        /******************* Write datas to Panel *********************/
+        /**************************************************************/
         $('#altitude_value').html(ALTITUDE);
         $('#speed_value').html(SPEED);
         $('.bottom-meter').css({"-webkit-transform": "translateY(" + Math.degrees(PITCH) + "px) rotate(" + Math.degrees(dir) + "deg)"});
         $('#pitch').html(Math.round(Math.degrees(PITCH)) + "&deg;");
         $('#roll').html(Math.round(Math.degrees(dir)) + "&deg;");
+        $('#targets').html("10/" + TARGETS);
+
+        var compassDisc = document.getElementById("compassDiscImg");
+        compassDisc.style.webkitTransform = "rotate(" + Math.degrees(ROLL) + "deg)";
+        compassDisc.style.MozTransform = "rotate(" + Math.degrees(ROLL) + "deg)";
+        compassDisc.style.transform = "rotate(" + Math.degrees(ROLL) + "deg)";
+
+
+        // FCONTROLL.update( delta );
+
+        /**************************************************************/
+        /******************* Target Collosion *************************/
+        /**************************************************************/
+        for (var i = 0; i < collidableMeshList.length; i++) {
+            var coll = 25;
+            if (collidableMeshList[i].position.x + coll > GROUP.position.x && collidableMeshList[i].position.x - coll < GROUP.position.x
+                && collidableMeshList[i].position.y + coll > (GROUP.position.y + 100) && collidableMeshList[i].position.y - coll < (GROUP.position.y + 100)
+                && collidableMeshList[i].position.z + coll > GROUP.position.z && collidableMeshList[i].position.z - coll < GROUP.position.z
+            ) {
+                console.log(collidableMeshList[i].position);
+                console.log(GROUP.position);
+                scene.remove(collidableMeshList[i]);
+                removeA(collidableMeshList, collidableMeshList[i]);
+                if (!SOUNDS.effects.isPlaying) SOUNDS.effects.play();
+                TIME += 10;
+                TARGETS--;
+
+            }
+        }
+
     }
+
+    if(ALTITUDE < 0) { pausing();$('.game-over').show(); }
+    if(TARGETS == 0) { pausing();$('.game-win').show(); }
 
     var time = performance.now() * 0.001;
     water.material.uniforms.time.value += 1.0 / 60.0;
 
     key();
+    if (!PAUSE) keyboard.update();
     stats.update();
     renderer.render(scene, camera);
 }
+
+var TIMER = setInterval(function () {
+    if (PAUSE) return;
+    TIME --;
+    var minutes = Math.floor(TIME / 60);
+    document.getElementById("time").innerHTML = " " + sec2str(TIME);//+ minutes + ":" + ( TIME - (minutes * 60));
+    if (TIME == 0) {
+        clearInterval(TIMER);
+        pausing();
+        $('.game-over').show();
+    }
+}, 1000);
 
