@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Airplane Lesson 3</title>
+    <title>Airplane Lesson 2</title>
     <meta charset="utf-8">
     <link rel="shortcut icon"
           href="https://cdn1.iconfinder.com/data/icons/shopping-colored-icons-vol-1/128/P-1-61-512.png">
@@ -13,8 +13,12 @@
 </head>
 
 <body>
+<div class="pause-conteiner">
+    <div class="text">PAUSED</div>
+    <div class="game-menu" style="position: relative; margin:0;left: 50%;transform: translateX(-50%);" onclick="window.location.replace('menu.html')">MENU</div>
+</div>
 <div class="timer">
-    <div style="width: 250px; float: left;">TARGETS <span id="targets">10/10</span></div><div style="width: 200px; float: left">TIME <span id="time">1:20</span></div>
+    <div style="width: 250px; float: left;">TARGETS <span id="targets">5/5</span></div><div style="width: 200px; float: left">TIME <span id="time">1:20</span></div>
 </div>
 <div class="speaker">
     <span class="fa fa-volume-up volicon">&nbsp;</span><br>
@@ -54,12 +58,13 @@
 <script src="js/gaussian.js"></script>
 <script src="js/weightedBoxBlurGaussian.js"></script>
 <script src="js/analysis.js"></script>
-<script src="js/analysis.js"></script>
+<script src="js/cannon.js"></script>
+
 
 
 <script>
     var value = 50;
-    var THROTTLE = 5
+    var THROTTLE = 0;
 
     function setLoading(percentVal) {
         var bar = $('.progress-bar-animated');
@@ -69,13 +74,13 @@
             setTimeout(function () {
                 $('.play').show();
 
-            }, 500);
+            }, 1000);
         }
 
     }
 
     var script = document.createElement('script');
-    script.src = "js/logic/model.js"
+    script.src = "js/logic/airplane3.js"
     document.body.appendChild(script);
     $('.loader').show();
     setLoading(value);
@@ -92,7 +97,7 @@
         $('.timer').fadeIn(1000);
         $('.panel').fadeIn(2000);
         SOUNDS.music.play();
-        SOUNDS.engine.play();
+//        SOUNDS.engine.play();
         start_camera();
     });
 
@@ -203,7 +208,7 @@
             </label> <span class="music-switch-text">MUSIC</span>
             <br>
             <label class="switch">
-                <input type="checkbox" checked id="engine">
+                <input type="checkbox" id="engine">
                 <span class="switch-slider round"></span>
             </label> <span class="music-switch-text">ENGINE</span>
             <br>
@@ -221,13 +226,14 @@
     <h1 class="blinking">Game Over</h1>
     <div class="game-btn-container">
         <div class="try-again" onclick="location.reload();">TRY AGAIN</div>
+        <div class="game-menu" onclick="window.location.replace('menu.html')">MENU</div>
     </div>
 </div>
 <div class="game-win">
     <h1 class="blinking">YOU WIN!</h1>
     <div class="game-btn-container">
         <div class="try-again" onclick="location.reload();">TRY AGAIN</div>
-        <div class="game-menu" onclick="location.reload();">MENU</div>
+        <div class="game-menu" onclick="window.location.replace('menu.html')">MENU</div>
     </div>
 </div>
 <script>
@@ -235,12 +241,15 @@
         PAUSE = !PAUSE;
         SOUNDS.engine.pause();
         SOUNDS.music.pause();
+        $('.pause-conteiner').fadeIn(500);
     }
 
     function resueme() {
         PAUSE = !PAUSE;
         SOUNDS.engine.play();
         SOUNDS.music.play();
+        $('.pause-conteiner').fadeOut(500);
+
     }
 
     function pausing() {
@@ -250,17 +259,12 @@
         }
         pause();
     }
-
-    /****** Levels ******/
-    sessionStorage['Level1'] = 'true';
-    sessionStorage['Level2'] = 'false';
-    sessionStorage['Level3'] = 'false';
-
     /*** Flouting speed ***/
     var tmp_speed;
     var timeout;
     /***********Engine*************/
     var ENGINE = true;
+    var START = true;
 
     function speedup() {
         if (tmp_speed > SPEED && ENGINE) {
@@ -270,7 +274,7 @@
             SPEED--;
             timeout = setTimeout(speedup, 100);
         } else {
-            if(THROTTLE == 0 && !ENGINE && GROUP.position.y > -100 ){
+            if(THROTTLE == 0 && !ENGINE && GROUP.position.y > -100 && !START){
                 if(SPEED > 0) SPEED--;
                 if (Math.degrees(PITCH) < 34) {
                     PITCH += 0.08;
@@ -284,14 +288,15 @@
 
 
     function throttle() {
-        $('#throttle_value').html((THROTTLE * 10) + '%');
-        SOUNDS.engine.setPlaybackRate(THROTTLE / 10 + 0.3);
+        if(!BRAKE) {
+            $('#throttle_value').html((THROTTLE * 10) + '%');
+            SOUNDS.engine.setPlaybackRate(THROTTLE / 10 + 0.3);
 
-        tmp_speed = Math.round(1.852 * (1 * (THROTTLE / 10) + 0.4) * 100);
-        if (timeout) clearTimeout(timeout);
-        speedup();
-
-        AirplaneAnimations.spinner.setDuration((10 - THROTTLE + 1));
+            tmp_speed = Math.round(1.852 * (1 * (THROTTLE / 10) + 0.4) * 100);
+            if (timeout) clearTimeout(timeout);
+            speedup();
+            AirplaneAnimations.spinner.setDuration(0.3 - ((THROTTLE * 2) / 100));
+        }
     }
 
 
@@ -318,6 +323,7 @@
         // Brake B
         if (event.which == 66) {
             $('#brake').find(".indicator").toggleClass('indicator-active indicator-deactive');
+            breake_onoff();
         }
         // Ignition I
         if (event.which == 73) {
@@ -328,7 +334,22 @@
         }
     });
 
+    function breake_onoff() {
+        if(BRAKE && START){tmp_speed = 40; speedup();}else { if(START) {tmp_speed = 0;speedup();}}
+        BRAKE = !BRAKE;
+    }
+
+    function speedoff() {
+        SPEED--;
+        if(SPEED > 0){
+            setTimeout(speedoff,100);
+        }
+    }
+
     function engineOff() {
+        if(START){
+            speedoff();
+        }
         if(THROTTLE > 0){
             SPEED--;
             THROTTLE --;
@@ -337,14 +358,17 @@
         }
         if (THROTTLE != 0) {
             setTimeout(engineOff, 200);
-        }else { SOUNDS.engine.pause();  AirplaneAnimations.spinner.halt(0); ENGINE = false;}
+        }else { SOUNDS.engine.pause();  AirplaneAnimations.spinner.halt(0); ENGINE = false; $('#engine').prop('checked', false);}
     }
+
     function engineON() {
         SOUNDS.engine.play();
         SOUNDS.engine.setPlaybackRate(0.3);
         AirplaneAnimations.spinner.reset();
+        AirplaneAnimations.spinner.setDuration(0.3 - ((THROTTLE*2)/100) );
         AirplaneAnimations.spinner.play();
         ENGINE = true;
+        $('#engine').prop('checked', true);
     }
 
     $(document).ready(function () {
@@ -369,6 +393,10 @@
             if(ENGINE){ engineOff();}else {
                 engineON();
             }
+        });
+
+        $('#brake').on('click', function () {
+            breake_onoff();
         });
 
         // Engine Sound

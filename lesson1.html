@@ -13,6 +13,10 @@
 </head>
 
 <body>
+<div class="pause-conteiner">
+    <div class="text">PAUSED</div>
+    <div class="game-menu" style="position: relative; margin:0;left: 50%;transform: translateX(-50%);" onclick="window.location.replace('menu.html')">MENU</div>
+</div>
 <div class="timer">
     <div style="width: 250px; float: left;">TARGETS <span id="targets">10/10</span></div><div style="width: 200px; float: left">TIME <span id="time">1:20</span></div>
 </div>
@@ -221,13 +225,14 @@
     <h1 class="blinking">Game Over</h1>
     <div class="game-btn-container">
         <div class="try-again" onclick="location.reload();">TRY AGAIN</div>
+        <div class="game-menu" onclick="window.location.replace('menu.html')">MENU</div>
     </div>
 </div>
 <div class="game-win">
     <h1 class="blinking">YOU WIN!</h1>
     <div class="game-btn-container">
         <div class="try-again" onclick="location.reload();">TRY AGAIN</div>
-        <div class="game-menu" onclick="location.reload();">MENU</div>
+        <div class="game-menu" onclick="window.location.replace('menu.html')">MENU</div>
     </div>
 </div>
 <script>
@@ -235,12 +240,14 @@
         PAUSE = !PAUSE;
         SOUNDS.engine.pause();
         SOUNDS.music.pause();
+        $('.pause-conteiner').fadeIn(500);
     }
 
     function resueme() {
         PAUSE = !PAUSE;
         SOUNDS.engine.play();
         SOUNDS.music.play();
+        $('.pause-conteiner').fadeOut(500);
     }
 
     function pausing() {
@@ -251,10 +258,6 @@
         pause();
     }
 
-    /****** Levels ******/
-    sessionStorage['Level1'] = 'true';
-    sessionStorage['Level2'] = 'false';
-    sessionStorage['Level3'] = 'false';
 
     /*** Flouting speed ***/
     var tmp_speed;

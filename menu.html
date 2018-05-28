@@ -9,57 +9,9 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css?family=Black+Han+Sans" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
     <style>
-        .menu-container{
-            position: absolute;
-            width: 100%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            padding: 10px;
-        }
-        .box-container{
-            width: 100%;
-            height: 100%;
-            background: #5b5b5b;
-            border-radius: 20px;
-            -webkit-box-shadow: -1px 2px 22px 10px rgba(143,137,143,1);
-            -moz-box-shadow: -1px 2px 22px 10px rgba(143,137,143,1);
-            box-shadow: -1px 2px 22px 10px rgba(143,137,143,1);
-        }
-        .menu-box{
-            height: 600px;
-            border: 20px solid transparent;
-            padding: 5px 10px;
-        }
-        .menu-box img{
-            max-width: 100%;
-        }
-        .menu-lesson{
-            text-align: center;
-            font-family: 'Black Han Sans', sans-serif;
-            font-size: 40px;
-        }
-        .menu-title{
-            margin: 20px 0;
-        }
-        .menu-describe{
-            text-align: center;
-            font-family: 'Black Han Sans', sans-serif;
-            font-size: 20px;
-        }
-        .lesson-start{
-            margin: 50px 0px;
-            text-align: center;
-            font-family: 'Black Han Sans', sans-serif;
-            font-size: 40px;
-            border: 5px solid white;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .lesson-start:hover{
-            opacity: .7;
-        }
 
     </style>
 </head>
@@ -68,7 +20,7 @@
 
         <div class="row">
 
-            <div class="col-md-4 menu-box">
+            <div class="col-md-4 menu-box" id="less1">
                 <div class="box-container">
                     <div class="menu-box">
                     <div class="menu-lesson">LESSON 1</div>
@@ -79,7 +31,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 menu-box">
+            <div class="col-md-4 menu-box" id="less2">
                 <div class="box-container">
                     <div class="menu-box">
                     <div class="menu-lesson">LESSON 2</div>
@@ -91,7 +43,7 @@
                 </div>
             </div>
             <div class="col-md-4 menu-box">
-                <div class="box-container">
+                <div class="box-container" id="less3">
                     <div class="menu-box">
                     <div class="menu-lesson">LESSON 3</div>
                     <img src="images/menu/lesson3.png">
@@ -102,6 +54,26 @@
                 </div>
             </div>
 
+            <script>
+                $(document).ready(function () {
+//                    sessionStorage['Level1'] = true;
+//                    if(!sessionStorage['Level1']){
+//                        console.log(sessionStorage['Level1']);
+//                        $("#less1").addClass('disabledMission');
+//                    }
+//                    if(!sessionStorage['Level2']){
+//                        console.log(sessionStorage['Level2']);
+//                        $("#less2").addClass('disabledMission');
+//
+//                    }
+//                    if(!sessionStorage['Level3']){
+//                        console.log(sessionStorage['Level3']);
+//                        $("#less3").addClass('disabledMission');
+//
+//                    }
+//                });
+
+            </script>
 
 </div>
 </div>

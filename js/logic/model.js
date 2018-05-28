@@ -706,6 +706,7 @@ function animate() {
                 if (!SOUNDS.effects.isPlaying) SOUNDS.effects.play();
                 TIME += 10;
                 TARGETS--;
+                if(TARGETS == 4){sessionStorage['Level2'] = true;};
 
             }
         }

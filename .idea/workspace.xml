@@ -2,27 +2,21 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5e14fc5c-c3f6-4d03-a164-7e597e5b0b8a" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/index-bg.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/menu/lesson1.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/menu/lesson2.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/menu/lesson3.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/torus.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/models/BodyTexture.bmp" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sounds/Celeb.mp3" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sounds/paradise.mp3" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/FlyControls.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/logic/airplane2.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lesson2.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lesson3.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/menu.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/models/mustang.FBX" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/start.html" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/lesson1.html" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/tester.html" afterPath="$PROJECT_DIR$/panel.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/models/tower.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/logic/airplane3.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/physijs_worker.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/models/airtower.FBX" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/panel.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/terrain.html" afterPath="" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/start.html" afterPath="$PROJECT_DIR$/index.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/css/style.css" afterPath="$PROJECT_DIR$/css/style.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/THREE_FBX.js" afterPath="$PROJECT_DIR$/js/THREE_FBX.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/logic/airplane2.js" afterPath="$PROJECT_DIR$/js/logic/airplane2.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/logic/model.js" afterPath="$PROJECT_DIR$/js/logic/model.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lesson1.html" afterPath="$PROJECT_DIR$/lesson1.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lesson2.html" afterPath="$PROJECT_DIR$/lesson2.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lesson3.html" afterPath="$PROJECT_DIR$/lesson3.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/menu.html" afterPath="$PROJECT_DIR$/menu.html" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -33,71 +27,12 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="airplane2.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/js/logic/airplane2.js">
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="429">
-              <caret line="528" column="6" lean-forward="true" selection-start-line="528" selection-start-column="6" selection-end-line="528" selection-end-column="6" />
+            <state relative-caret-position="420">
+              <caret line="20" column="7" lean-forward="true" selection-start-line="20" selection-start-column="7" selection-end-line="20" selection-end-column="7" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="lesson1.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lesson1.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="118">
-              <caret line="300" column="22" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="408" selection-end-column="0" />
-              <folding>
-                <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="menu.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/menu.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="634">
-              <caret line="96" column="55" lean-forward="true" selection-start-line="96" selection-start-column="55" selection-end-line="96" selection-end-column="55" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="lesson3.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lesson3.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="63">
-              <caret line="3" column="28" lean-forward="false" selection-start-line="3" selection-start-column="28" selection-end-line="3" selection-end-column="28" />
-              <folding>
-                <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="start.html" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/start.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="336">
-              <caret line="16" column="10" lean-forward="true" selection-start-line="16" selection-start-column="10" selection-end-line="16" selection-end-column="10" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="lesson2.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lesson2.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="42">
-              <caret line="2" column="6" lean-forward="true" selection-start-line="2" selection-start-column="6" selection-end-line="2" selection-end-column="6" />
-              <folding>
-                <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -108,43 +43,43 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="CSS File" />
-        <option value="JavaScript File" />
         <option value="HTML File" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>Cube</find>
-      <find>BoxGe</find>
-      <find>range</find>
-      <find>class=&quot;range&quot;</find>
-      <find>ALTITUDE</find>
-      <find>duration_AirplaneSpeed</find>
+      <find>THROTTLE</find>
+      <find>prop</find>
+      <find>engin</find>
+      <find>tmp</find>
+      <find>BARKE</find>
+      <find>PITCH</find>
+      <find>setDu</find>
+      <find>engineon</find>
+      <find>action</find>
+      <find>setdu</find>
+      <find>engine</find>
+      <find>brake</find>
+      <find>barke</find>
+      <find>speedup</find>
+      <find>throttle()</find>
+      <find>tmp_speed</find>
       <find>SPEED</find>
-      <find>'.play</find>
-      <find>terrainScene</find>
-      <find>camera</find>
-      <find>click</find>
-      <find>start_camera</find>
-      <find>ma</find>
-      <find>bind</find>
-      <find>moveState</find>
-      <find>pitchDown</find>
-      <find>80</find>
-      <find>rotationVector</find>
-      <find>dir</find>
-      <find>torus</find>
-      <find>font-fa</find>
-      <find>Altit</find>
-      <find>.play</find>
-      <find>GROUP2</find>
-      <find>.multiplyVector3() has been removed</find>
-      <find>Thr</find>
-      <find>value</find>
-      <find>time</find>
-      <find>GROUP</find>
-      <find>igni</find>
+      <find>setLoading</find>
+      <find>play()</find>
+      <find>MENU</find>
+      <find>starting</find>
+      <find>teker</find>
+      <find>collidableMeshList</find>
+      <find>BRAKE</find>
+      <find>throttle</find>
+      <find>game-menu</find>
+      <find>pause</find>
+      <find>TARGETS</find>
+      <find>airplane2</find>
+      <find>fog</find>
     </findStrings>
     <replaceStrings>
       <replace>Ship</replace>
@@ -155,6 +90,7 @@
       <replace>ceilPowerOfTwo</replace>
       <replace>false</replace>
       <replace>light</replace>
+      <replace>BRAKE</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -184,14 +120,18 @@
         <option value="$PROJECT_DIR$/js/THREE_FBX.js" />
         <option value="$PROJECT_DIR$/panel.html" />
         <option value="$PROJECT_DIR$/index.html" />
-        <option value="$PROJECT_DIR$/css/style.css" />
         <option value="$PROJECT_DIR$/start.html" />
+        <option value="$PROJECT_DIR$/js/physi.js" />
+        <option value="$PROJECT_DIR$/js/physijs_worker.js" />
+        <option value="$PROJECT_DIR$/physics.html" />
         <option value="$PROJECT_DIR$/js/logic/model.js" />
-        <option value="$PROJECT_DIR$/lesson1.html" />
         <option value="$PROJECT_DIR$/js/logic/airplane2.js" />
-        <option value="$PROJECT_DIR$/menu.html" />
-        <option value="$PROJECT_DIR$/lesson3.html" />
         <option value="$PROJECT_DIR$/lesson2.html" />
+        <option value="$PROJECT_DIR$/lesson1.html" />
+        <option value="$PROJECT_DIR$/menu.html" />
+        <option value="$PROJECT_DIR$/css/style.css" />
+        <option value="$PROJECT_DIR$/js/logic/airplane3.js" />
+        <option value="$PROJECT_DIR$/lesson3.html" />
       </list>
     </option>
   </component>
@@ -202,7 +142,7 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="529" />
     <option name="width" value="1400" />
     <option name="height" value="990" />
@@ -243,23 +183,23 @@
   <component name="PropertiesComponent">
     <property name="settings.editor.selected.configurable" value="configurable.group.appearance" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$USER_HOME$/OneDrive/Documents/Three.js/Three" />
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\89502\Documents\Airplane\models" />
+      <recent name="C:\Users\89502\Documents\Airplane\js" />
+      <recent name="C:\Users\89502\Documents\Airplane\images\menu" />
+      <recent name="C:\Users\89502\Documents\Airplane\images" />
+      <recent name="C:\Users\89502\Documents\Airplane\sounds" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\89502\Documents\Airplane\sounds" />
       <recent name="C:\Users\89502\Documents\Airplane\textures" />
       <recent name="C:\Users\89502\Documents\Airplane\assets\img" />
       <recent name="C:\Users\89502\Documents\Airplane" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\89502\Documents\Airplane\images\menu" />
-      <recent name="C:\Users\89502\Documents\Airplane\images" />
-      <recent name="C:\Users\89502\Documents\Airplane\sounds" />
-      <recent name="C:\Users\89502\Documents\Airplane\models" />
-      <recent name="C:\Users\89502\Documents\Airplane\js" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -316,18 +256,20 @@
       <workItem from="1527267308500" duration="5902000" />
       <workItem from="1527308746057" duration="13717000" />
       <workItem from="1527327903779" duration="20745000" />
-      <workItem from="1527394508510" duration="43858000" />
+      <workItem from="1527394508510" duration="46424000" />
+      <workItem from="1527483600574" duration="43767000" />
+      <workItem from="1527540430542" duration="24000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="255815000" />
+    <option name="totallyTimeSpent" value="302172000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-9" y="-9" width="1938" height="1048" extended-state="6" />
+    <frame x="-9" y="-9" width="1938" height="1048" extended-state="7" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.33458647" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.34425348" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.770362" sideWeight="0.5021482" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -359,62 +301,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/js/inflate.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="294">
-          <caret line="14" column="731" lean-forward="false" selection-start-line="14" selection-start-column="731" selection-end-line="14" selection-end-column="731" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/test.FBX">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1198">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/anims.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/FBXLoader.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="21">
-          <caret line="9" column="17" lean-forward="true" selection-start-line="9" selection-start-column="17" selection-end-line="9" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/OneDrive/Documents/Three.js/Three/Keyboard.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="514">
-          <caret line="94" column="0" lean-forward="true" selection-start-line="92" selection-start-column="7" selection-end-line="94" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/Sky.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-945">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/libs/ammo.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/ship.FBX">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js/VolumetricFire.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -453,11 +339,6 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/images/road.jpg">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/images/bg.jpg">
       <provider selected="true" editor-type-id="images">
         <state />
@@ -485,13 +366,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/panel.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="20" column="6" lean-forward="false" selection-start-line="20" selection-start-column="6" selection-end-line="20" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/panel.html" />
     <entry file="file://$PROJECT_DIR$/images/pause-button.svg">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -503,7 +378,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="378">
           <caret line="18" column="1" lean-forward="false" selection-start-line="18" selection-start-column="1" selection-end-line="18" selection-end-column="1" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -518,7 +392,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="781">
           <caret line="1156" column="2" lean-forward="false" selection-start-line="1156" selection-start-column="2" selection-end-line="1156" selection-end-column="2" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -526,7 +399,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="781">
           <caret line="299" column="2" lean-forward="false" selection-start-line="299" selection-start-column="2" selection-end-line="299" selection-end-column="2" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -534,7 +406,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="781">
           <caret line="219" column="5" lean-forward="false" selection-start-line="219" selection-start-column="5" selection-end-line="219" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -542,7 +413,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="781">
           <caret line="134" column="2" lean-forward="false" selection-start-line="134" selection-start-column="2" selection-end-line="134" selection-end-column="2" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -550,7 +420,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="781">
           <caret line="152" column="5" lean-forward="false" selection-start-line="152" selection-start-column="5" selection-end-line="152" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -558,7 +427,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="781">
           <caret line="539" column="5" lean-forward="false" selection-start-line="539" selection-start-column="5" selection-end-line="539" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -566,7 +434,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="382">
           <caret line="143" column="37" lean-forward="true" selection-start-line="143" selection-start-column="37" selection-end-line="143" selection-end-column="37" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -574,7 +441,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="323">
           <caret line="7" column="11584" lean-forward="false" selection-start-line="7" selection-start-column="11584" selection-end-line="7" selection-end-column="11584" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -597,17 +463,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="340">
           <caret line="219" column="41" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="329" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/terrain.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="20" column="39" lean-forward="true" selection-start-line="20" selection-start-column="39" selection-end-line="20" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/terrain.html" />
     <entry file="file://$PROJECT_DIR$/js/FlyControls.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="220">
@@ -619,7 +478,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="115">
           <caret line="43573" column="55" lean-forward="false" selection-start-line="43573" selection-start-column="55" selection-end-line="43573" selection-end-column="55" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -627,110 +485,126 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/panel.html" />
+    <entry file="file://$PROJECT_DIR$/rotation tester.html" />
+    <entry file="file://$PROJECT_DIR$/images/road.jpg">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/physi.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="262">
+          <caret line="392" column="65" lean-forward="false" selection-start-line="392" selection-start-column="65" selection-end-line="392" selection-end-column="65" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/physijs_worker.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="367">
+          <caret line="211" column="0" lean-forward="true" selection-start-line="211" selection-start-column="0" selection-end-line="211" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/anims.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/physics.html" />
+    <entry file="file://$PROJECT_DIR$/js/cannon.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="298">
+          <caret line="352" column="7" lean-forward="false" selection-start-line="352" selection-start-column="4" selection-end-line="352" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/airtower.FBX">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/ship.FBX">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/canon.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="319">
-          <caret line="711" column="12" lean-forward="true" selection-start-line="710" selection-start-column="0" selection-end-line="722" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/panel.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3461">
-          <caret line="375" column="30" lean-forward="true" selection-start-line="375" selection-start-column="30" selection-end-line="375" selection-end-column="30" />
-          <folding>
-            <marker date="1527429139640" expanded="false" signature="10536:10549" ph="..." />
-            <marker date="1527429139640" expanded="false" signature="11197:11210" ph="..." />
-            <marker date="1527429139640" expanded="false" signature="11520:11533" ph="..." />
-            <marker date="1527429139640" expanded="false" signature="11841:11871" ph="..." />
-            <marker date="1527429139640" expanded="false" signature="11905:11939" ph="..." />
-            <marker date="1527429139640" expanded="false" signature="11996:12030" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/css/style.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="319">
-          <caret line="507" column="0" lean-forward="false" selection-start-line="507" selection-start-column="0" selection-end-line="508" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/rotation tester.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="424">
-          <caret line="141" column="37" lean-forward="true" selection-start-line="141" selection-start-column="37" selection-end-line="141" selection-end-column="37" />
-          <folding />
+        <state relative-caret-position="-243">
+          <caret line="641" column="21" lean-forward="false" selection-start-line="641" selection-start-column="16" selection-end-line="641" selection-end-column="21" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/js/logic/model.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="365">
-          <caret line="289" column="16" lean-forward="true" selection-start-line="289" selection-start-column="16" selection-end-line="289" selection-end-column="16" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/logic/airplane2.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="429">
-          <caret line="528" column="6" lean-forward="true" selection-start-line="528" selection-start-column="6" selection-end-line="528" selection-end-column="6" />
-          <folding />
+        <state relative-caret-position="553">
+          <caret line="712" column="0" lean-forward="true" selection-start-line="692" selection-start-column="7" selection-end-line="712" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/lesson1.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="118">
-          <caret line="300" column="22" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="408" selection-end-column="0" />
-          <folding>
-            <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lesson3.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="63">
-          <caret line="3" column="28" lean-forward="false" selection-start-line="3" selection-start-column="28" selection-end-line="3" selection-end-column="28" />
-          <folding>
-            <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/menu.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="634">
-          <caret line="96" column="55" lean-forward="true" selection-start-line="96" selection-start-column="55" selection-end-line="96" selection-end-column="55" />
-          <folding />
+        <state relative-caret-position="378">
+          <caret line="18" column="6" lean-forward="false" selection-start-line="18" selection-start-column="6" selection-end-line="18" selection-end-column="6" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/lesson2.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="42">
-          <caret line="2" column="6" lean-forward="true" selection-start-line="2" selection-start-column="6" selection-end-line="2" selection-end-column="6" />
-          <folding>
-            <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
+        <state relative-caret-position="315">
+          <caret line="15" column="0" lean-forward="false" selection-start-line="15" selection-start-column="0" selection-end-line="18" selection-end-column="6" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/start.html">
+    <entry file="file://$PROJECT_DIR$/menu.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="336">
-          <caret line="16" column="10" lean-forward="true" selection-start-line="16" selection-start-column="10" selection-end-line="16" selection-end-column="10" />
+        <state relative-caret-position="21">
+          <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/css/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="781">
+          <caret line="624" column="1" lean-forward="false" selection-start-line="624" selection-start-column="1" selection-end-line="624" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/logic/airplane2.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="260">
+          <caret line="495" column="64" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="721" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lesson3.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="76" column="21" lean-forward="true" selection-start-line="76" selection-start-column="21" selection-end-line="76" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/logic/airplane3.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="199">
+          <caret line="171" column="0" lean-forward="true" selection-start-line="171" selection-start-column="0" selection-end-line="171" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="20" column="7" lean-forward="true" selection-start-line="20" selection-start-column="7" selection-end-line="20" selection-end-column="7" />
           <folding />
         </state>
       </provider>
