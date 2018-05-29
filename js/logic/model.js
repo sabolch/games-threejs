@@ -627,14 +627,13 @@ function DrawIsland() {
     var settings = new Settings([0, 15, 0], ISLANDS[0]);
     var settings = new Settings([2000, 15, 1000], ISLANDS[1]);
 
-
+    var material = new THREE.MeshBasicMaterial({
+        color: 0xffff00,
+        map: new THREE.TextureLoader().load('images/torus.jpg')
+    });
     /*** Darw  Targets ***/
     for (var i = 0; i < TARGETS; i++) {
         var geometry = new THREE.TorusGeometry(9, 4, 16, 32);
-        var material = new THREE.MeshBasicMaterial({
-            color: 0xffff00,
-            map: new THREE.TextureLoader().load('images/torus.jpg')
-        });
         var torus = new THREE.Mesh(geometry, material);
         torus.position.set(getRandomInt(-2000, 2000), getRandomInt(110, 300), getRandomInt((-i - 100)-1500, (i + 100) + 1500));
         scene.add(torus);
@@ -699,8 +698,6 @@ function animate() {
                 && collidableMeshList[i].position.y + coll > (GROUP.position.y + 100) && collidableMeshList[i].position.y - coll < (GROUP.position.y + 100)
                 && collidableMeshList[i].position.z + coll > GROUP.position.z && collidableMeshList[i].position.z - coll < GROUP.position.z
             ) {
-                console.log(collidableMeshList[i].position);
-                console.log(GROUP.position);
                 scene.remove(collidableMeshList[i]);
                 removeA(collidableMeshList, collidableMeshList[i]);
                 if (!SOUNDS.effects.isPlaying) SOUNDS.effects.play();
@@ -713,8 +710,8 @@ function animate() {
 
     }
 
-    if(ALTITUDE < 0) { pausing();$('.game-over').show(); }
-    if(TARGETS == 0) { pausing();$('.game-win').show(); }
+    if(ALTITUDE < 0) {  gameOver(); }
+    if(TARGETS == 0) { gameWin(); }
 
     var time = performance.now() * 0.001;
     water.material.uniforms.time.value += 1.0 / 60.0;
@@ -731,9 +728,20 @@ var TIMER = setInterval(function () {
     var minutes = Math.floor(TIME / 60);
     document.getElementById("time").innerHTML = " " + sec2str(TIME);//+ minutes + ":" + ( TIME - (minutes * 60));
     if (TIME == 0) {
-        clearInterval(TIMER);
-        pausing();
-        $('.game-over').show();
+        gameOver();
     }
 }, 1000);
 
+function gameOver() {
+    clearInterval(TIMER);
+    pausing();
+    $('.game-over').show();
+    $('.pause-conteiner').hide();
+}
+
+function gameWin() {
+    clearInterval(TIMER);
+    pausing();
+    $('.game-win').show();
+    $('.pause-conteiner').hide();
+}

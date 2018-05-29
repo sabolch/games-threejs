@@ -722,6 +722,54 @@
         }
     }, 1000);
 
+//    /**************** Cloads **************/
+//    var g1 = new THREE.Geometry();
+//
+//    var texture = THREE.ImageUtils.loadTexture( 'images/cloud10.png', null, animate );
+//    texture.magFilter = THREE.LinearMipMapLinearFilter;
+//    texture.minFilter = THREE.LinearMipMapLinearFilter;
+//
+//    var fog = new THREE.Fog( 0x4584b4, - 100, 3000 );
+//
+//    var m1 = new THREE.ShaderMaterial( {
+//
+//        uniforms: {
+//
+//            "map": { type: "t", value: texture },
+//            "fogColor" : { type: "c", value: fog.color },
+//            "fogNear" : { type: "f", value: fog.near },
+//            "fogFar" : { type: "f", value: fog.far },
+//
+//        },
+//        vertexShader: document.getElementById( 'vs' ).textContent,
+//        fragmentShader: document.getElementById( 'fs' ).textContent,
+//        depthWrite: false,
+//        depthTest: false,
+//        transparent: true
+//
+//    } );
+//
+//    var p1 = new THREE.Mesh( new THREE.PlaneGeometry( 64, 64 ) );
+//
+//    for ( var i = 0; i < 8000; i++ ) {
+//
+//        p1.position.x = Math.random() * 1000 - 500;
+//        p1.position.y = - Math.random() * Math.random() * 200 - 15;
+//        p1.position.z = i;
+//        p1.rotation.z = Math.random() * Math.PI;
+//        p1.scale.x = p1.scale.y = Math.random() * Math.random() * 1.5 + 0.5;
+//
+//        THREE.GeometryUtils.merge( g1, p1 );
+//
+//
+//    }
+//
+//    var m = new THREE.Mesh( g1, m1 );
+//    scene.add( m );
+//
+//    m = new THREE.Mesh( g1, m1 );
+//    m.position.z = -8000;
+//    m.position.y = 20;
 </script>
 
 

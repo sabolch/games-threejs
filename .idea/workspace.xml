@@ -2,18 +2,30 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5e14fc5c-c3f6-4d03-a164-7e597e5b0b8a" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/models/tower.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/logic/airplane3.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/physijs_worker.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/models/airtower.FBX" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/panel.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/terrain.html" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/start.html" afterPath="$PROJECT_DIR$/index.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/cloud10.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/models/SopCamel.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/models/Tent_Defuse.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/models/camp_diffuse.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/models/camp_normal.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/models/camp_specular.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/models/rocks_diffuse.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/models/rocks_normal.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/models/rocks_specular.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/models/utensilrope_diffuse.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/models/utensilrope_normal.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/models/utensilrope_specular.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/models/woodsground_diffuse.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/models/woodsground_glow.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/models/woodsground_normal.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/models/woodsground_specular.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/models/tent.FBX" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/models/ww1.FBX" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/css/style.css" afterPath="$PROJECT_DIR$/css/style.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/canon.html" afterPath="$PROJECT_DIR$/canon.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/THREE_FBX.js" afterPath="$PROJECT_DIR$/js/THREE_FBX.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/logic/airplane2.js" afterPath="$PROJECT_DIR$/js/logic/airplane2.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/logic/airplane3.js" afterPath="$PROJECT_DIR$/js/logic/airplane3.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/logic/model.js" afterPath="$PROJECT_DIR$/js/logic/model.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lesson1.html" afterPath="$PROJECT_DIR$/lesson1.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lesson2.html" afterPath="$PROJECT_DIR$/lesson2.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lesson3.html" afterPath="$PROJECT_DIR$/lesson3.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/menu.html" afterPath="$PROJECT_DIR$/menu.html" />
@@ -50,36 +62,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>THROTTLE</find>
-      <find>prop</find>
-      <find>engin</find>
-      <find>tmp</find>
-      <find>BARKE</find>
-      <find>PITCH</find>
-      <find>setDu</find>
-      <find>engineon</find>
-      <find>action</find>
-      <find>setdu</find>
-      <find>engine</find>
-      <find>brake</find>
-      <find>barke</find>
-      <find>speedup</find>
-      <find>throttle()</find>
-      <find>tmp_speed</find>
-      <find>SPEED</find>
-      <find>setLoading</find>
-      <find>play()</find>
-      <find>MENU</find>
-      <find>starting</find>
-      <find>teker</find>
-      <find>collidableMeshList</find>
-      <find>BRAKE</find>
       <find>throttle</find>
       <find>game-menu</find>
       <find>pause</find>
-      <find>TARGETS</find>
       <find>airplane2</find>
       <find>fog</find>
+      <find>.game-win</find>
+      <find>decoScene</find>
+      <find>.game-over</find>
+      <find>.pause-conteiner</find>
+      <find>THREE.Terrain(</find>
+      <find>Texture marked for update but image is undefined</find>
+      <find>image is not power of two</find>
+      <find>engineoff</find>
+      <find>ENGINE</find>
+      <find>BRA</find>
+      <find>PITCH</find>
+      <find>START</find>
+      <find>torus</find>
+      <find>collidableMeshList</find>
+      <find>HOUSES</find>
+      <find>image</find>
+      <find>tower</find>
+      <find>XRefUrlS</find>
+      <find>Map</find>
+      <find>road</find>
+      <find>TOWER</find>
+      <find>box</find>
+      <find>load</find>
+      <find>15</find>
+      <find>TARGETS</find>
     </findStrings>
     <replaceStrings>
       <replace>Ship</replace>
@@ -91,6 +103,7 @@
       <replace>false</replace>
       <replace>light</replace>
       <replace>BRAKE</replace>
+      <replace>TENT</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -102,7 +115,6 @@
         <option value="$PROJECT_DIR$/css/bootstrap.css" />
         <option value="$PROJECT_DIR$/js/inflate.js" />
         <option value="$PROJECT_DIR$/js/FBXLoader.js" />
-        <option value="$PROJECT_DIR$/canon.html" />
         <option value="$PROJECT_DIR$/tester.html" />
         <option value="$PROJECT_DIR$/css/index.css" />
         <option value="$PROJECT_DIR$/js/CanvasRenderer.js" />
@@ -117,21 +129,22 @@
         <option value="$PROJECT_DIR$/js/index.js" />
         <option value="$PROJECT_DIR$/rotation tester.html" />
         <option value="$PROJECT_DIR$/js/FlyControls.js" />
-        <option value="$PROJECT_DIR$/js/THREE_FBX.js" />
         <option value="$PROJECT_DIR$/panel.html" />
         <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/start.html" />
         <option value="$PROJECT_DIR$/js/physi.js" />
         <option value="$PROJECT_DIR$/js/physijs_worker.js" />
         <option value="$PROJECT_DIR$/physics.html" />
+        <option value="$PROJECT_DIR$/lesson1.html" />
+        <option value="$PROJECT_DIR$/css/style.css" />
+        <option value="$PROJECT_DIR$/menu.html" />
+        <option value="$PROJECT_DIR$/js/THREE_FBX.js" />
+        <option value="$PROJECT_DIR$/lesson2.html" />
         <option value="$PROJECT_DIR$/js/logic/model.js" />
         <option value="$PROJECT_DIR$/js/logic/airplane2.js" />
-        <option value="$PROJECT_DIR$/lesson2.html" />
-        <option value="$PROJECT_DIR$/lesson1.html" />
-        <option value="$PROJECT_DIR$/menu.html" />
-        <option value="$PROJECT_DIR$/css/style.css" />
-        <option value="$PROJECT_DIR$/js/logic/airplane3.js" />
+        <option value="$PROJECT_DIR$/canon.html" />
         <option value="$PROJECT_DIR$/lesson3.html" />
+        <option value="$PROJECT_DIR$/js/logic/airplane3.js" />
       </list>
     </option>
   </component>
@@ -142,7 +155,7 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="529" />
     <option name="width" value="1400" />
     <option name="height" value="990" />
@@ -165,6 +178,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -176,8 +191,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -188,18 +201,18 @@
     <property name="list.type.of.created.stylesheet" value="CSS" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\89502\Documents\Airplane\models" />
-      <recent name="C:\Users\89502\Documents\Airplane\js" />
-      <recent name="C:\Users\89502\Documents\Airplane\images\menu" />
-      <recent name="C:\Users\89502\Documents\Airplane\images" />
-      <recent name="C:\Users\89502\Documents\Airplane\sounds" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\89502\Documents\Airplane\sounds" />
       <recent name="C:\Users\89502\Documents\Airplane\textures" />
       <recent name="C:\Users\89502\Documents\Airplane\assets\img" />
       <recent name="C:\Users\89502\Documents\Airplane" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\89502\Documents\Airplane\models" />
+      <recent name="C:\Users\89502\Documents\Airplane\images" />
+      <recent name="C:\Users\89502\Documents\Airplane\js" />
+      <recent name="C:\Users\89502\Documents\Airplane\images\menu" />
+      <recent name="C:\Users\89502\Documents\Airplane\sounds" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -258,18 +271,19 @@
       <workItem from="1527327903779" duration="20745000" />
       <workItem from="1527394508510" duration="46424000" />
       <workItem from="1527483600574" duration="43767000" />
-      <workItem from="1527540430542" duration="24000" />
+      <workItem from="1527540430542" duration="84000" />
+      <workItem from="1527565576857" duration="27767000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="302172000" />
+    <option name="totallyTimeSpent" value="329999000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-9" y="-9" width="1938" height="1048" extended-state="7" />
+    <frame x="-9" y="-9" width="1938" height="1048" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.34425348" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.349087" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.770362" sideWeight="0.5021482" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -301,49 +315,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/js/VolumetricFire.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/Fire.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/FireShader.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/Projector.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/images/1.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/images/groude.jpg">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/images/bg.jpg">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/images/grass.jpg">
       <provider selected="true" editor-type-id="images">
         <state />
@@ -474,13 +445,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/THREE_FBX.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="115">
-          <caret line="43573" column="55" lean-forward="false" selection-start-line="43573" selection-start-column="55" selection-end-line="43573" selection-end-column="55" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/models/mustang.FBX">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -524,52 +488,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/models/airtower.FBX">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/models/ship.FBX">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/canon.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-243">
-          <caret line="641" column="21" lean-forward="false" selection-start-line="641" selection-start-column="16" selection-end-line="641" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/logic/model.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="553">
-          <caret line="712" column="0" lean-forward="true" selection-start-line="692" selection-start-column="7" selection-end-line="712" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lesson1.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="378">
-          <caret line="18" column="6" lean-forward="false" selection-start-line="18" selection-start-column="6" selection-end-line="18" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lesson2.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="15" column="0" lean-forward="false" selection-start-line="15" selection-start-column="0" selection-end-line="18" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/menu.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="21">
-          <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -580,24 +502,124 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/logic/airplane2.js">
+    <entry file="file://$PROJECT_DIR$/js/THREE_FBX.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="260">
-          <caret line="495" column="64" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="721" selection-end-column="0" />
+        <state relative-caret-position="298">
+          <caret line="17464" column="79" lean-forward="false" selection-start-line="17464" selection-start-column="54" selection-end-line="17464" selection-end-column="79" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lesson3.html">
+    <entry file="file://$PROJECT_DIR$/lesson1.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="27">
+          <caret line="3" column="36" lean-forward="true" selection-start-line="3" selection-start-column="36" selection-end-line="3" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/logic/model.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="203">
+          <caret line="624" column="5" lean-forward="true" selection-start-line="624" selection-start-column="5" selection-end-line="624" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lesson2.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="412">
+          <caret line="267" column="39" lean-forward="true" selection-start-line="267" selection-start-column="39" selection-end-line="267" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/canon.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="571">
+          <caret line="731" column="6" lean-forward="false" selection-start-line="731" selection-start-column="6" selection-end-line="731" selection-end-column="55" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/menu.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="231">
+          <caret line="11" column="71" lean-forward="true" selection-start-line="11" selection-start-column="71" selection-end-line="11" selection-end-column="71" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/tent.FBX">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/BodyTexture.bmp">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/airtower.FBX">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="764">
+          <caret line="59" column="387" lean-forward="false" selection-start-line="59" selection-start-column="379" selection-end-line="59" selection-end-column="387" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/ww1.FBX">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="260">
+          <caret line="911" column="730" lean-forward="false" selection-start-line="911" selection-start-column="727" selection-end-line="911" selection-end-column="730" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/camp_specular.jpg">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/camp_normal.jpg">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/camp_diffuse.jpg">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/SopCamel.jpg">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/logic/airplane2.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="136">
-          <caret line="76" column="21" lean-forward="true" selection-start-line="76" selection-start-column="21" selection-end-line="76" selection-end-column="21" />
+          <caret line="278" column="15" lean-forward="true" selection-start-line="278" selection-start-column="15" selection-end-line="278" selection-end-column="15" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/js/logic/airplane3.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="199">
-          <caret line="171" column="0" lean-forward="true" selection-start-line="171" selection-start-column="0" selection-end-line="171" selection-end-column="0" />
+        <state relative-caret-position="283">
+          <caret line="783" column="27" lean-forward="true" selection-start-line="783" selection-start-column="27" selection-end-line="783" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lesson3.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="204" column="58" lean-forward="true" selection-start-line="204" selection-start-column="58" selection-end-line="204" selection-end-column="58" />
+          <folding />
         </state>
       </provider>
     </entry>

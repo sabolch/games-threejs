@@ -60,8 +60,6 @@
 <script src="js/analysis.js"></script>
 <script src="js/cannon.js"></script>
 
-
-
 <script>
     var value = 50;
     var THROTTLE = 0;
@@ -274,12 +272,18 @@
             SPEED--;
             timeout = setTimeout(speedup, 100);
         } else {
-            if(THROTTLE == 0 && !ENGINE && GROUP.position.y > -100 && !START){
+            if(THROTTLE == 0 && !ENGINE && GROUP.position.y > -100 ){
                 if(SPEED > 0) SPEED--;
+
                 if (Math.degrees(PITCH) < 34) {
-                    PITCH += 0.08;
-                    camera.rotateX(0.02);
-                    GROUP2.rotateX(0.04);
+                    if(START){
+
+                    }else{
+                        PITCH += 0.08;
+                        camera.rotateX(0.02);
+                        GROUP2.rotateX(0.04);
+                    }
+
                 }
                 timeout = setTimeout(speedup, 100);
             }
@@ -349,6 +353,7 @@
     function engineOff() {
         if(START){
             speedoff();
+            START = true;
         }
         if(THROTTLE > 0){
             SPEED--;

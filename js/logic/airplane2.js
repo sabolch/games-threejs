@@ -28,13 +28,14 @@ Math.degrees = function (radians) {
     return radians * 180 / Math.PI;
 };
 
-function sec2str(t){
-    var d = Math.floor(t/86400),
-        h = ('0'+Math.floor(t/3600) % 24).slice(-2),
-        m = ('0'+Math.floor(t/60)%60).slice(-2),
+function sec2str(t) {
+    var d = Math.floor(t / 86400),
+        h = ('0' + Math.floor(t / 3600) % 24).slice(-2),
+        m = ('0' + Math.floor(t / 60) % 60).slice(-2),
         s = ('0' + t % 60).slice(-2);
-    return (d>0?d+'d ':'')+(h>0?h+':':'')+(m>0?m+':':'')+(t>60?s:s+'s');
+    return (d > 0 ? d + 'd ' : '') + (h > 0 ? h + ':' : '') + (m > 0 ? m + ':' : '') + (t > 60 ? s : s + 's');
 }
+
 /*********************************************************************/
 /**************************** Varriables *****************************/
 /*********************************************************************/
@@ -44,12 +45,11 @@ var BRAKE = true;
 var ROLL = 0, PITCH = 0, SPEED = 1, ALTITUDE = 0;
 var SOUNDS = {};
 var keyboard;
-var TARGETS = 5;
+var TARGETS = 15;
 var TIME = 100;
-
 var ANGLE = 14;
 
-
+var TOWER;
 
 var collidableMeshList = [];
 
@@ -70,7 +70,6 @@ var AirplaneAnimations = {};
 var start_controll = false;
 
 ENGINE = false;
-
 
 
 // Physics variables
@@ -130,20 +129,21 @@ function initCannon() {
 
 
     var sphere = new CANNON.Sphere(1);
-    sphereBBB = new CANNON.Body({ mass: 1 });
+    sphereBBB = new CANNON.Body({mass: 1});
     sphereBBB.addShape(sphere);
     // var pos = new CANNON.Vec3(0,0,size);
-    sphereBBB.position.set(0,1,0);
+    sphereBBB.position.set(0, 1, 0);
     world.add(sphereBBB);
-    sphereBBB.addEventListener("collide",function(e){
-        if(e.body.id){
-            if((e.body.id < 0) && !(sphereBBB.position.x < 25 &&  sphereBBB.position.x > -25
-            && sphereBBB.position.z > -10 && sphereBBB.position.z < 900)) {
+    sphereBBB.addEventListener("collide", function (e) {
+        if (e.body.id) {
+            if ((e.body.id < 0) && !(sphereBBB.position.x < 25 && sphereBBB.position.x > -25
+                    && sphereBBB.position.z > -10 && sphereBBB.position.z < 900)) {
                 console.log("Collided with body: ID ", e.body.id);
-                pausing();
-                $('.game-over').show();
-            }else {
+                gameOver();
+            } else {
+
                 console.log("Collided with body: ID ", e.body.id);
+                console.log(sphereBBB.position.y);
             }
         }
         // console.log();
@@ -152,7 +152,7 @@ function initCannon() {
 
     // Create a plane
     var groundShape = new CANNON.Plane();
-    var groundBody = new CANNON.Body({mass: 0, material: physicsMaterial });
+    var groundBody = new CANNON.Body({mass: 0, material: physicsMaterial});
     groundBody.id = -1;
     groundBody.addShape(groundShape);
     groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2);
@@ -208,7 +208,7 @@ function init() {
         setTimeout(function () {
             setLoading(100);
 
-        },1000);
+        }, 1000);
     };
 
 
@@ -227,10 +227,10 @@ function init() {
     loader.load('models/mustang.fbx',
 
         function (object) {
-            object.mixer = new THREE.AnimationMixer( object );
-            mixers.push( object.mixer );
+            object.mixer = new THREE.AnimationMixer(object);
+            mixers.push(object.mixer);
 
-            AirplaneAnimations.spinner = object.mixer.clipAction( object.animations[ 0 ] );
+            AirplaneAnimations.spinner = object.mixer.clipAction(object.animations[0]);
             // AirplaneAnimations.spinner.play();
             object.traverse(function (child) {
                 if (child.isMesh) {
@@ -242,7 +242,7 @@ function init() {
             Airplane = object;
             Airplane.position.set(0, 100, 0);
             Airplane.scale.set(0.5, 0.5, 0.5);
-            Airplane.rotateY(Math.PI/64);
+            Airplane.rotateY(Math.PI / 64);
             scene.add(Airplane);
 
             // Airplane Camera
@@ -277,16 +277,17 @@ function init() {
                 }
 
             });
-            object.scale.set(0.2,0.2,0.2);
+            object.scale.set(0.2, 0.2, 0.2);
             object.position.set(80, 0, 200);
-            scene.add(object);
+            TOWER = object;
+            scene.add(TOWER);
 
-            var boxShape = new CANNON.Box(new CANNON.Vec3(50,100,60));
-               var boxBody = new CANNON.Body();
-               boxBody.addShape(boxShape);
-                boxBody.id = -2;
-               world.add(boxBody);
-               boxBody.position.set( 80, 0, 200 );
+            var boxShape = new CANNON.Box(new CANNON.Vec3(50, 100, 60));
+            var boxBody = new CANNON.Body();
+            boxBody.addShape(boxShape);
+            boxBody.id = -2;
+            world.add(boxBody);
+            boxBody.position.set(80, 0, 200);
 
         }
     );
@@ -325,15 +326,16 @@ function init() {
     container.appendChild(renderer.domElement);
 
     var l = new THREE.TextureLoader();
-    plane = l.load('images/road.jpg', function ( texture ) {
-        var geometry = new THREE.PlaneGeometry(50, 1100,16);
+    plane = l.load('images/road.jpg', function (texture) {
+        var geometry = new THREE.PlaneGeometry(50, 1100, 16);
         var material = new THREE.MeshPhongMaterial({map: texture});
         plane = new THREE.Mesh(geometry, material);
         texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-        texture.repeat.set(1,4);
+        texture.repeat.set(1, 4);
         plane.rotation.x = -(Math.PI / 2);
-        plane.position.set(0,0,480);
-        scene.add(plane)});
+        plane.position.set(0, 0, 480);
+        scene.add(plane)
+    });
 
     /**************************************************************/
     /************************ Cerate Ocean ************************/
@@ -367,6 +369,7 @@ function init() {
         sky.material.uniforms.sunPosition.value = light.position.copy(light.position);
         cubeCamera.update(renderer, scene);
     }
+
     updateSun();
     //
 
@@ -404,11 +407,11 @@ function forces() {
 
     if (pitch < 0) {
         GROUP.translateY(-pitch / 100);
-        sphereBBB.position.y += -pitch / 150;
+        sphereBBB.position.y += -pitch / 100;
 
     } else if (pitch > 0) {
         GROUP.translateY(-pitch / 100);
-        sphereBBB.position.y += -pitch / 150;
+        sphereBBB.position.y += -pitch / 100;
 
     } else {
     }
@@ -418,14 +421,14 @@ function forces() {
         // sphereBBB.quaternion.setFromAxisAngle(new CANNON.Vec3(0,1,0),(-0.0001 - (roll / 10)));
         // sphereBBB.quaternion.y +=  (-0.0001 - (roll / 10));
         var rotationQuaternion = new CANNON.Quaternion();
-        rotationQuaternion.setFromAxisAngle(new CANNON.Vec3(0,1,0),(-0.0001 - (roll / roll_delay)));
+        rotationQuaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), (-0.0001 - (roll / roll_delay)));
         sphereBBB.quaternion = sphereBBB.quaternion.mult(rotationQuaternion);
         ROLL -= -0.0001 - (roll / roll_delay);
 
     } else if (roll > 0) {
         // sphereBBB.quaternion.setFromAxisAngle(new CANNON.Vec3(0,1,0),(-0.0001 - (roll / 10)));
         var rotationQuaternion = new CANNON.Quaternion();
-        rotationQuaternion.setFromAxisAngle(new CANNON.Vec3(0,1,0),(-0.0001 - (roll / roll_delay)));
+        rotationQuaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), (-0.0001 - (roll / roll_delay)));
         sphereBBB.quaternion = sphereBBB.quaternion.mult(rotationQuaternion);
         // sphereBBB.quaternion.y +=  (-0.0001 - (roll / 10));
 
@@ -442,9 +445,9 @@ function key() {
     /************************************************************/
     if (keyboard.pressed("down") || keyboard.pressed("S")) {
         if (Math.degrees(PITCH) > -ANGLE && start_controll) {
-                PITCH -= 0.008;
-                GROUP2.rotateX(-0.004);
-                camera.rotateX(-0.002);
+            PITCH -= 0.008;
+            GROUP2.rotateX(-0.004);
+            camera.rotateX(-0.002);
         }
     }
     /************************************************************/
@@ -452,9 +455,9 @@ function key() {
     /************************************************************/
     if (keyboard.pressed("up") || keyboard.pressed("W")) {
         if (Math.degrees(PITCH) < ANGLE && start_controll) {
-                PITCH += 0.008;
-                camera.rotateX(0.002);
-                GROUP2.rotateX(0.004);
+            PITCH += 0.008;
+            camera.rotateX(0.002);
+            GROUP2.rotateX(0.004);
         }
     }
 
@@ -482,8 +485,29 @@ function key() {
     /************************************************************/
     /************************ TESTEL ****************************/
     /************************************************************/
+    if (keyboard.down("F")) {
+        function goFullscreen() {
+            // Must be called as a result of user interaction to work
+            mf = document.documentElement;
+            mf.webkitRequestFullscreen();
+            mf.style.display = "";
+        }
 
+        function fullscreenChanged() {
+            if (document.webkitFullscreenElement == null) {
+                mf = document.documentElement;
+                // mf.style.display="none";
+            }
+        }
+
+        // document.onwebkitfullscreenchange = fullscreenChanged;
+        // document.documentElement.onclick = goFullscreen;
+        document.onkeydown = goFullscreen;
+
+        goFullscreen();
     }
+
+}
 
 
 function onWindowResize() {
@@ -496,94 +520,114 @@ function onWindowResize() {
 /*************************** Island ***************************/
 
 /**************************************************************/
-function DrawIsland() {
-    var heightmapImage = new Image();
-    heightmapImage.src = 'images/heightmap.png';
+function buildTree() {
+    var material = [
+        new THREE.MeshLambertMaterial({color: 0x3d2817}), // brown
+        new THREE.MeshLambertMaterial({color: 0x2d4c1e}), // green
+    ];
 
-    function Settings(pos, okey) {
-        var that = this;
-        var blend;
-        var loader = new THREE.TextureLoader();
-        loader.load('images/sand1.jpg', function (t1) {
-            t1.wrapS = t1.wrapT = THREE.RepeatWrapping;
-            loader.load('images/grass1.jpg', function (t2) {
-                loader.load('images/stone1.jpg', function (t3) {
-                    loader.load('images/snow1.jpg', function (t4) {
-                        // t2.repeat.x = t2.repeat.y = 2;
-                        blend = THREE.Terrain.generateBlendedMaterial([
-                            {texture: t1},
-                            {texture: t2, levels: [10, 20, 40, 70]},
-                            {texture: t3, levels: [40, 70, 80, 120]},
-                            {
-                                texture: t4,
-                                glsl: '1.0 - smoothstep(65.0 + smoothstep(-256.0, 256.0, vPosition.x) * 10.0, 120.0, vPosition.z)'
-                            },
-                            {
-                                texture: t3,
-                                glsl: 'slope > 0.7853981633974483 ? 0.2 : 1.0 - smoothstep(0.47123889803846897, 0.7853981633974483, slope) + 0.2'
-                            }, // between 27 and 45 degrees
-                        ]);
-                        that.Regenerate();
-                    });
-                });
-            });
-        });
-        this.easing = 'Linear';
-        this.heightmap = 'Perlin';
-        this.smoothing = 'None';
-        this.maxHeight = 100;
-        this.segments = webglExists ? 30 : 15;
-        this.steps = 1;
-        this.turbulent = false;
-        this.size = 20000;
-        this.texture = webglExists ? 'Blended' : 'Wireframe';
-        this.edgeDirection = 'Normal';
-        this.edgeType = 'Box';
-        this.edgeDistance = 512;
-        this.edgeCurve = 'EaseInOut';
-        this['width:length ratio'] = 1.0;
-        this['Flight mode'] = false;
-        this['Light color'] = '#' + light.color.getHexString();
+    var c0 = new THREE.Mesh(new THREE.CylinderGeometry(2, 2, 12, 6, 1, true));
+    c0.position.y = 6;
+    var c1 = new THREE.Mesh(new THREE.CylinderGeometry(0, 10, 14, 8));
+    c1.position.y = 18;
+    var c2 = new THREE.Mesh(new THREE.CylinderGeometry(0, 9, 13, 8));
+    c2.position.y = 25;
+    var c3 = new THREE.Mesh(new THREE.CylinderGeometry(0, 8, 12, 8));
+    c3.position.y = 32;
 
-        window.rebuild = this.Regenerate = function () {
-            var s = parseInt(that.segments, 10);
-            var o = {
-                after: that.after,
-                easing: THREE.Terrain[that.easing],
-                heightmap: THREE.Terrain[that.heightmap],
-                material: blend,
-                maxHeight: that.maxHeight - 50,
-                minHeight: -15,
-                steps: that.steps,
-                stretch: true,
-                turbulent: that.turbulent,
-                useBufferGeometry: false,
-                xSize: that.size,
-                ySize: Math.round(that.size * that['width:length ratio']),
-                xSegments: s,
-                ySegments: Math.round(s * that['width:length ratio']),
-                _mesh: typeof terrainScene === 'undefined' ? null : terrainScene.children[0], // internal only
-            };
-            //scene.remove(terrainScene);
-            okey = THREE.Terrain(o);
-            okey.position.set(pos[0], pos[1], pos[2]);
-            scene.add(okey);
-        };
+    var g = new THREE.Geometry();
+    c0.updateMatrix();
+    c1.updateMatrix();
+    c2.updateMatrix();
+    c3.updateMatrix();
+    g.merge(c0.geometry, c0.matrix);
+    g.merge(c1.geometry, c1.matrix);
+    g.merge(c2.geometry, c2.matrix);
+    g.merge(c3.geometry, c3.matrix);
 
+    var b = c0.geometry.faces.length;
+    for (var i = 0, l = g.faces.length; i < l; i++) {
+        g.faces[i].materialIndex = i < b ? 0 : 1;
     }
 
-     var settings = new Settings([0, -40, 0], ISLANDS[0]);
+    var m = new THREE.Mesh(g, material);
 
+    m.scale.x = m.scale.z = 5;
+    m.scale.y = 1.25;
+    return m;
+}
 
+function DrawIsland() {
+    var loader = new THREE.TextureLoader();
+    var t1 = loader.load('images/sand1.jpg', function (t1) {
+        t1.wrapS = t1.wrapT = THREE.RepeatWrapping;
+    });
+    var t2 = loader.load('images/grass1.jpg');
+    var t3 = loader.load('images/stone1.jpg');
+    var t4 = loader.load('images/snow1.jpg');
+
+    var material = THREE.Terrain.generateBlendedMaterial([
+        // The first texture is the base; other textures are blended in on top.
+        {texture: t1},
+        // Start blending in at height -80; opaque between -35 and 20; blend out by 50
+        {texture: t2, levels: [-80, -35, 20, 50]},
+        {texture: t3, levels: [20, 50, 60, 85]},
+        // How quickly this texture is blended in depends on its x-position.
+        {
+            texture: t4,
+            glsl: '1.0 - smoothstep(65.0 + smoothstep(-256.0, 256.0, vPosition.x) * 10.0, 80.0, vPosition.z)'
+        },
+        // Use this texture if the slope is between 27 and 45 degrees
+        {
+            texture: t3,
+            glsl: 'slope > 0.7853981633974483 ? 0.2 : 1.0 - smoothstep(0.47123889803846897, 0.7853981633974483, slope) + 0.2'
+        },
+    ]);
+// Generate a terrain
+    var xS = 32, yS = 32;
+    terrainScene = THREE.Terrain({
+        easing: THREE.Terrain.Linear,
+        frequency: 2.5,
+        heightmap: THREE.Terrain.Perlin,
+        material: material,
+        maxHeight: 50,
+        minHeight: -15,
+        steps: 1,
+        useBufferGeometry: false,
+        xSegments: xS,
+        xSize: 20000,
+        ySegments: yS,
+        ySize: 20000,
+    });
+// Assuming you already have your global scene, add the terrain to it
+    scene.add(terrainScene);
+
+// Optional:
+// Get the geometry of the terrain across which you want to scatter meshes
+    var mesh = buildTree();
+    var geo = terrainScene.children[0].geometry;
+// Add randomly distributed foliage
+    decoScene = THREE.Terrain.ScatterMeshes(geo, {
+        mesh: mesh,
+        w: xS,
+        h: yS,
+        smoothSpread: 0.2,
+        maxSlope: 0.6283185307179586, // 36deg or 36 / 180 * Math.PI, about the angle of repose of earth
+        maxTilt: 0.15707963267948966,
+        spread: 0.5,
+        randomness: Math.random,
+    });
+    terrainScene.add(decoScene);
+    terrainScene.position.set(0, -50, 0);
     /*** Darw  Targets ***/
+    var material = new THREE.MeshBasicMaterial({
+        color: 0xffff00,
+        map: new THREE.TextureLoader().load('images/torus.jpg')
+    });
     for (var i = 0; i < TARGETS; i++) {
         var geometry = new THREE.TorusGeometry(9, 4, 16, 32);
-        var material = new THREE.MeshBasicMaterial({
-            color: 0xffff00,
-            map: new THREE.TextureLoader().load('images/torus.jpg')
-        });
         var torus = new THREE.Mesh(geometry, material);
-        torus.position.set(getRandomInt(-2000, 2000), getRandomInt(110, 300), getRandomInt((-i - 100)-1500, (i + 100) + 1500));
+        torus.position.set(getRandomInt(-2000, 2000), getRandomInt(110, 300), getRandomInt((-i - 100) - 1500, (i + 100) + 1500));
         scene.add(torus);
         collidableMeshList.push(torus);
     }
@@ -606,6 +650,7 @@ function removeA(array, element) {
 
 
 var dt = 1 / 60;
+
 function updatePhysics() {
     world.step(dt);
     GROUP.position.copy(sphereBBB.position);
@@ -613,19 +658,19 @@ function updatePhysics() {
 }
 
 function starting() {
-    if(!(sphereBBB.position.x < 25 &&  sphereBBB.position.x > -25
-            && sphereBBB.position.z > -10 && sphereBBB.position.z < 980)){
-        pausing();
-        $('.game-over').show();
-        clearInterval(TIMER);
+    if (!(sphereBBB.position.x < 25 && sphereBBB.position.x > -25
+            && sphereBBB.position.z > -10 && sphereBBB.position.z < 980) && sphereBBB.position.y < 1) {
+        gameOver();
     }
+
     if (sphereBBB.position.y > 10) START = false;
-    if(SPEED > 60){ setTimeout(function () {
-        start_controll = true;
-    },2000);
-    setTimeout(function () {
-        ANGLE = 34;
-    },6000);
+    if (SPEED > 60) {
+        setTimeout(function () {
+            start_controll = true;
+        }, 2000);
+        setTimeout(function () {
+            ANGLE = 34;
+        }, 6000);
     }
 }
 
@@ -638,13 +683,22 @@ function animate() {
     if (mixers.length > 0) {
         updatePhysics();
 
+        // Landing
+        // if(sphereBBB.position.y < 10){ ANGLE = 14}else {ANGLE = 34;}
+
+        if (sphereBBB.position.y < 10 && sphereBBB.position.x < 25 && sphereBBB.position.x > -25
+                && sphereBBB.position.z > -300 && sphereBBB.position.z < 1300) {
+            START = true;
+        }
+
+
         for (var i = 0; i < mixers.length; i++) {
             mixers[i].update(delta);
         }
         //
         // Airplane mooving
-            if(SPEED != 0) sphereBBB.quaternion.vmult(new CANNON.Vec3(0, 0, (SPEED / 185.2) * 80), sphereBBB.velocity);
-
+        if (SPEED >= 0) sphereBBB.quaternion.vmult(new CANNON.Vec3(0, 0, (SPEED / 185.2) * (START ? 100 : 80)), sphereBBB.velocity);
+        if(SPEED < 0) SPEED = 0;
 
         // Altitude
         ALTITUDE = Math.round(GROUP.position.y * 3);
@@ -657,7 +711,7 @@ function animate() {
         $('.bottom-meter').css({"-webkit-transform": "translateY(" + Math.degrees(PITCH) + "px) rotate(" + Math.degrees(dir) + "deg)"});
         $('#pitch').html(Math.round(Math.degrees(PITCH)) + "&deg;");
         $('#roll').html(Math.round(Math.degrees(dir)) + "&deg;");
-        $('#targets').html("5/" + TARGETS);
+        $('#targets').html("15/" + TARGETS);
 
         var compassDisc = document.getElementById("compassDiscImg");
         compassDisc.style.webkitTransform = "rotate(" + Math.degrees(ROLL) + "deg)";
@@ -670,7 +724,7 @@ function animate() {
         /******************* Target Collosion *************************/
         /**************************************************************/
         //
-        if(START) starting();
+        if (START) starting();
 
         /**************************************************************/
         /******************* Target Collosion *************************/
@@ -681,14 +735,15 @@ function animate() {
                 && collidableMeshList[i].position.y + coll > (sphereBBB.position.y) && collidableMeshList[i].position.y - coll < (sphereBBB.position.y)
                 && collidableMeshList[i].position.z + coll > sphereBBB.position.z && collidableMeshList[i].position.z - coll < sphereBBB.position.z
             ) {
-                console.log(collidableMeshList[i].position);
-                console.log(sphereBBB.position);
                 scene.remove(collidableMeshList[i]);
                 removeA(collidableMeshList, collidableMeshList[i]);
                 if (!SOUNDS.effects.isPlaying) SOUNDS.effects.play();
                 TIME += 10;
                 TARGETS--;
-                if(TARGETS == 2){sessionStorage['Level3'] = true;};
+                if (TARGETS == 6) {
+                    sessionStorage['Level3'] = true;
+                }
+                ;
 
             }
         }
@@ -696,8 +751,12 @@ function animate() {
 
     }
 
-    if(ALTITUDE < 0) { pausing();$('.game-over').show(); }
-    if(TARGETS == 0) { pausing();$('.game-win').show(); }
+    if (ALTITUDE < 0) {
+        gameOver();
+    }
+    if (TARGETS == 0) {
+        gameWin();
+    }
 
     var time = performance.now() * 0.001;
 
@@ -709,13 +768,24 @@ function animate() {
 
 var TIMER = setInterval(function () {
     if (PAUSE) return;
-    TIME --;
+    TIME--;
     var minutes = Math.floor(TIME / 60);
     document.getElementById("time").innerHTML = " " + sec2str(TIME);//+ minutes + ":" + ( TIME - (minutes * 60));
     if (TIME == 0) {
-        clearInterval(TIMER);
-        pausing();
-        $('.game-over').show();
+        gameOver();
     }
 }, 1000);
 
+function gameOver() {
+    clearInterval(TIMER);
+    pausing();
+    $('.game-over').show();
+    $('.pause-conteiner').hide();
+}
+
+function gameWin() {
+    clearInterval(TIMER);
+    pausing();
+    $('.game-win').show();
+    $('.pause-conteiner').hide();
+}
