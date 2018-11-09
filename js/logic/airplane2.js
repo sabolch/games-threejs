@@ -224,7 +224,7 @@ function init() {
     /******************** FXB LOADER LOAD OBJECT ******************/
     /**************************************************************/
     var loader = new THREE.FBXLoader(manager);
-    loader.load('models/mustang.fbx',
+    loader.load('js/mustang.fbx',
 
         function (object) {
             object.mixer = new THREE.AnimationMixer(object);
@@ -267,7 +267,7 @@ function init() {
         }
     );
 
-    loader.load('models/airtower.fbx',
+    loader.load('js/airtower.fbx',
 
         function (object) {
             object.traverse(function (child) {

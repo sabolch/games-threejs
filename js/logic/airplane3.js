@@ -224,7 +224,7 @@ function init() {
     /******************** FXB LOADER LOAD OBJECT ******************/
     /**************************************************************/
     var loader = new THREE.FBXLoader(manager);
-    loader.load('models/ww1.fbx',
+    loader.load('js/ww1.fbx',
 
         function (object) {
             object.mixer = new THREE.AnimationMixer(object);
@@ -246,7 +246,7 @@ function init() {
             scene.add(Airplane);
 
 
-            loader.load('models/tent.fbx',
+            loader.load('js/tent.fbx',
 
                 function (object) {
                     object.traverse(function (child) {
@@ -286,7 +286,7 @@ function init() {
 
 
 
-            loader.load('models/tent2.fbx',
+            loader.load('js/tent2.fbx',
 
                 function (object) {
                     object.traverse(function (child) {
@@ -316,7 +316,7 @@ function init() {
                 }
             );
 
-            loader.load('models/camp.fbx',
+            loader.load('js/camp.fbx',
 
                 function (object) {
                     object.traverse(function (child) {

@@ -168,7 +168,7 @@ function init() {
     /******************** FXB LOADER LOAD OBJECT ******************/
     /**************************************************************/
     var loader = new THREE.FBXLoader(manager);
-    loader.load('models/ok2.fbx',
+    loader.load('js/ok2.fbx',
 
         function (object) {
 
