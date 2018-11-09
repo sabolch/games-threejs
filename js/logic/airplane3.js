@@ -172,7 +172,7 @@ function init() {
 
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0xa0a0a0);
-    // scene.fog = new THREE.Fog(0x222222, 50, 300);
+    scene.fog = new THREE.Fog(0xdddddd, 300, 800);
 
 
     /*********************************************************************/
@@ -496,7 +496,7 @@ function forces() {
         var rotationQuaternion = new CANNON.Quaternion();
         rotationQuaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), (-0.0001 - (roll / roll_delay)));
         sphereBBB.quaternion = sphereBBB.quaternion.mult(rotationQuaternion);
-        ROLL -= -0.0001 - (roll / roll_delay);
+        ROLL += -0.0001 - (roll / roll_delay);
 
     } else if (roll > 0) {
         // sphereBBB.quaternion.setFromAxisAngle(new CANNON.Vec3(0,1,0),(-0.0001 - (roll / 10)));
@@ -505,7 +505,7 @@ function forces() {
         sphereBBB.quaternion = sphereBBB.quaternion.mult(rotationQuaternion);
         // sphereBBB.quaternion.y +=  (-0.0001 - (roll / 10));
 
-        ROLL += 0.0001 - (roll / roll_delay);
+        ROLL += -0.0001 - (roll / roll_delay);
     } else {
     }
 }

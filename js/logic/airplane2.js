@@ -423,7 +423,7 @@ function forces() {
         var rotationQuaternion = new CANNON.Quaternion();
         rotationQuaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), (-0.0001 - (roll / roll_delay)));
         sphereBBB.quaternion = sphereBBB.quaternion.mult(rotationQuaternion);
-        ROLL -= -0.0001 - (roll / roll_delay);
+        ROLL += -0.0001 - (roll / roll_delay);
 
     } else if (roll > 0) {
         // sphereBBB.quaternion.setFromAxisAngle(new CANNON.Vec3(0,1,0),(-0.0001 - (roll / 10)));
@@ -432,7 +432,7 @@ function forces() {
         sphereBBB.quaternion = sphereBBB.quaternion.mult(rotationQuaternion);
         // sphereBBB.quaternion.y +=  (-0.0001 - (roll / 10));
 
-        ROLL += 0.0001 - (roll / roll_delay);
+        ROLL += -0.0001 - (roll / roll_delay);
     } else {
     }
 }
